@@ -12,6 +12,8 @@ def get_connections():
                 connections[process.name] = process.get_connections()
         except psutil.AccessDenied:
             continue
+        except psutil.NoSuchProcess:
+            continue
     return connections
 
 def get_ports(connections, status):
@@ -31,18 +33,6 @@ def get_ports(connections, status):
 
     return list(set(ports))
 
-def ports(status, previous_ports):
+def ports(status):
     connections = get_connections()
-    scanned_ports = get_ports(connections, status)
-    if previous_ports:
-        print 'hello'
-        print 'scanned', scanned_ports
-        print 'previous', previous_ports
-        if previous_ports == scanned_ports:
-            return None
-        else:
-            return scanned_ports
-
-    return scanned_ports
-
-
+    return get_ports(connections, status)

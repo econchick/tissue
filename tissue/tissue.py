@@ -9,18 +9,25 @@ from txsockjs.factory import SockJSFactory
 from ports import ports
 
 
+class PortStatus(object):
+    def __init__(self):
+        self.open_ports = set()
+
+    def update(self, ports):
+        new_ports = [port for port in ports if port not in self.open_ports]
+        closed_ports = [port for port in self.open_ports if port not in ports]
+        self.open_ports = ports
+
+        return new_ports, closed_ports
+
+
 class PCAPProtocol(Protocol):
     def __init__(self):
-        self.listen_ports = ports('LISTEN', None)
-        self.established_ports = ports('ESTABLISHED', None)
-        ep = LoopingCall(self.update_ports, status=('ESTABLISHED',self.established_ports))
-        ep.start(5)
-        lp = LoopingCall(self.update_ports, status=('LISTEN', self.listen_ports))
-        lp.start(5)
+        self.port_status = PortStatus()
 
     def connectionMade(self):
-        self.write_ports('LISTEN', self.listen_ports)
-        self.write_ports('ESTABLISHED', self.established_ports)
+        lp = LoopingCall(self.update_ports, status='ESTABLISHED')
+        lp.start(5)
 
     def dataReceived(self, data):
         pass
@@ -29,14 +36,14 @@ class PCAPProtocol(Protocol):
         self.transport.write((status, ports))
 
     def update_ports(self, status):
-        new_ports = ports(status[0], status[1])
-        if not new_ports:
-            print 'no new ports'
+        scanned_ports = ports(status)
+        new_ports, closed_ports = self.port_status.update(scanned_ports)
+        if not new_ports and not closed_ports:
             return
-        else:
-            print 'new ports!'
-            self.write_ports(status[0], new_ports)
-            return
+        if new_ports:
+            self.write_ports(status, new_ports)
+        if closed_ports:
+            self.write_ports('CLOSED', closed_ports)
 
 
 log.startLogging(sys.stdout)
