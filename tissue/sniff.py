@@ -1,4 +1,5 @@
 import select as s
+import random
 
 from scapy.all import *
 import pygeoip
@@ -13,24 +14,25 @@ def parse_stream(stream):
 
 def trace_route():
     # filter should be local IP addr
-    stream = sniff(iface="en1", filter='tcp and src 10.1.56.83', count=1)[0]
-    ether_layer, IP_layer, proto_layer = parse_stream(stream)
-    destination = IP_layer.dst
-    src = IP_layer.src
-    dport = proto_layer.dport
-    sport = proto_layer.sport
+    streams = sniff(iface="en1", filter='tcp and src 10.1.56.83', count=10)
+    for stream in streams:
+        ether_layer, IP_layer, proto_layer = parse_stream(stream)
+        destination = IP_layer.dst
+        src = IP_layer.src
+        dport = proto_layer.dport
+        sport = proto_layer.sport
 
-    while True:
-        try:
-            res, unans = traceroute(target=destination, dport=dport, sport=sport, maxttl=20)
-            traces = res.res
-            hops = [src]
-            for trace in traces:
-                hops.append(trace[1].src)
+        while True:
+            try:
+                res, unans = traceroute(target=destination, dport=dport, sport=sport, maxttl=20)
+                traces = res.res
+                hops = [src]
+                for trace in traces:
+                    hops.append(trace[1].src)
 
-            return hops, sport
-        except s.error:
-            continue
+                return hops, sport
+            except s.error:
+                continue
 
 
 def map_ip(hops):
@@ -41,6 +43,6 @@ def map_ip(hops):
         if geo_data:
             lat = geo_data['latitude']
             lon = geo_data['longitude']
-            coordinates.append((lat, lon))
+            coordinates.append((lon, lat))
 
     return coordinates

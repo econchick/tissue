@@ -4,6 +4,8 @@
     <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
     <script src="bubble_chart.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="world_map.js"></script>
 </head>
 <body>
     hello
@@ -50,6 +52,13 @@
             }
             if (e.data.indexOf('TRACE') !== -1){
                 console.log('TRACE', e.data);
+                for (var i = 0; i < e.data[2].length - 1; i++) {
+                    var from = e.data[2][i];
+                    var to = e.data[2][i + 1];
+                    console.log(from);
+                    console.log(to);
+                    worldMap.addLine(from, to, "green")
+                }
             }
             // e.data = dictionary of network data
             console.log('message', e.data);
@@ -59,6 +68,16 @@
             // leaving this here just in case
         };
 
+var width = 500,
+    height = 500;
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var worldMap = new WorldMap(svg, width, height);
+
+d3.select(self.frameElement).style("height", height + "px");
     </script>
 </body>
 </html>

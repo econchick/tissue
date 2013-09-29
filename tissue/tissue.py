@@ -30,7 +30,7 @@ class PCAPProtocol(Protocol):
         lp = LoopingCall(self.update_ports, status='ESTABLISHED')
         gc = LoopingCall(self.get_coordinates)
         lp.start(1)
-        gc.start(25)
+        gc.start(4, now=False)
 
     def dataReceived(self, data):
         pass
