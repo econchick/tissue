@@ -27,7 +27,7 @@ class PCAPProtocol(Protocol):
 
     def connectionMade(self):
         lp = LoopingCall(self.update_ports, status='ESTABLISHED')
-        lp.start(5)
+        lp.start(1)
 
     def dataReceived(self, data):
         pass
