@@ -7,6 +7,7 @@ from twisted.python import log
 from txsockjs.factory import SockJSFactory
 
 from ports import ports
+from sniff import trace_route, map_ip
 
 
 class PortStatus(object):
@@ -27,23 +28,33 @@ class PCAPProtocol(Protocol):
 
     def connectionMade(self):
         lp = LoopingCall(self.update_ports, status='ESTABLISHED')
+        gc = LoopingCall(self.get_coordinates)
         lp.start(1)
+        gc.start(25)
 
     def dataReceived(self, data):
         pass
 
-    def write_ports(self, status, ports):
-        self.transport.write((status, ports))
+    def write_to_socket(self, key, data):
+        self.transport.write((key, data))
 
     def update_ports(self, status):
         scanned_ports = ports(status)
         new_ports, closed_ports = self.port_status.update(scanned_ports)
-        if not new_ports and not closed_ports:
-            return
-        if new_ports:
-            self.write_ports(status, new_ports)
+        self.write_to_socket(status, new_ports)
         if closed_ports:
-            self.write_ports('CLOSED', closed_ports)
+            self.write_to_socket('CLOSED', closed_ports)
+
+    def write_coordinates(self, key, port, data):
+        self.transport.write((key, port, data))
+
+    def get_coordinates(self):
+        traceroute, sport = trace_route()
+        coordinates = map_ip(traceroute)
+        print "traceroute = ", traceroute
+        print "coordinates = ", coordinates
+        self.write_coordinates('TRACE', sport, coordinates)
+
 
 
 log.startLogging(sys.stdout)

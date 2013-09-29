@@ -1,12 +1,12 @@
 <html>
 <head>
+    <link rel="stylesheet" href="tissue.css" type="text/css">
     <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
     <script src="bubble_chart.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
 </head>
 <body>
     hello
-
     <script>
         var diameter = 500;
         var svg = d3.select("body").append("svg")
@@ -18,14 +18,26 @@
 
         var sock = new SockJS('http://127.0.0.1:8080');
         sock.onopen = function() {
-            console.log('open');
+            // leaving this here just in case
         };
         sock.onmessage = function(e) {
             if (e.data.indexOf('ESTABLISHED') !== -1){
-                console.log('ESTABLISHED', e.data[1]);
+                for (var i in bubbleChart.allbubbles.children){
+                    var child = bubbleChart.allbubbles.children[i];
+                    if (child.value < 5){
+                        var node = bubbleChart.getNode(child.className);
+                        console.log(node)
+                        bubbleChart.resizeNode(node, child.value + 1);
+                    }
+
+                }
+                var size = 1;
+                if (bubbleChart.allbubbles.children.length == 0){
+                     size = 5;
+                }
                 for (var i in e.data[1]){
                     var port = e.data[1][i];
-                    bubbleChart.addNode({"name": "port" + port, "size": 1, "id": port}, null);
+                    bubbleChart.addNode({"name": "port" + port, "size": size, "id": port}, null);
                 }
             }
             if (e.data.indexOf('CLOSED') !== -1){
@@ -36,12 +48,15 @@
                     bubbleChart.removeNode(node);
                 }
             }
+            if (e.data.indexOf('TRACE') !== -1){
+                console.log('TRACE', e.data);
+            }
             // e.data = dictionary of network data
             console.log('message', e.data);
 
         };
         sock.onclose = function() {
-            console.log('close');
+            // leaving this here just in case
         };
 
     </script>
