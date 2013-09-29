@@ -31,9 +31,17 @@ def get_ports(connections, status):
 
     return list(set(ports))
 
-def ports(status):
+def ports(status, previous_ports):
     connections = get_connections()
     scanned_ports = get_ports(connections, status)
+    if previous_ports:
+        print 'hello'
+        print 'scanned', scanned_ports
+        print 'previous', previous_ports
+        if previous_ports == scanned_ports:
+            return None
+        else:
+            return scanned_ports
 
     return scanned_ports
 
