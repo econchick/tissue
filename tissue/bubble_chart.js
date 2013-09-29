@@ -6,7 +6,7 @@ function BubbleChart(svg, diameter) {
     this.diameter = diameter,
     this.format = d3.format(",d"),
     this.color = d3.scale.category20c();
-    
+
     this.bubble = d3.layout.pack()
         .sort(null)
         .size([this.diameter, this.diameter])
@@ -22,7 +22,7 @@ function BubbleChart(svg, diameter) {
         svg.selectAll(".node").transition()
             .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
     };
-    
+
     this.resizeNode = function(nnode, size) {
         var index = this.allbubbles.children.indexOf(nnode);
         this.allbubbles.children[index].value = size;
@@ -30,7 +30,7 @@ function BubbleChart(svg, diameter) {
         var node = svg.selectAll("#node-" + nnode.className);
         var circle = node.select("circle");
         var self = this;
-    
+
         circle
             .transition().duration(1000)
             .style("fill", "orange")
@@ -55,7 +55,7 @@ function BubbleChart(svg, diameter) {
         var node = svg.selectAll("#node-" + oldnode.className);
         var circle = node.select("circle");
         var self = this;
-    
+
         circle
             .transition().duration(1000)
             .style("fill", "red")
@@ -73,7 +73,7 @@ function BubbleChart(svg, diameter) {
 
     this.addNode = function(newnode, onclick) {
         this.allbubbles.children.push({packageName: null, className: "" + newnode.id, value: newnode.size});
-    
+
         var node = svg.selectAll(".node")
             .data(this.bubble.nodes(this.allbubbles)
             .filter(function(d) { return !d.children; }))
@@ -82,24 +82,24 @@ function BubbleChart(svg, diameter) {
             .attr("id", "node-" + newnode.id)
             .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
             .on("click", onclick);
-    
+
         var self = this;
-    
+
         node.append("title")
           .text(function(d) { return d.className + ": " + self.format(d.value); });
-    
+
         node.append("circle")
             .style("fill", "green")
             .transition().duration(1000)
             .style("fill", function(d) { return self.color(d.packageName); });
-    
+
         node.append("text")
             .attr("dy", ".3em")
             .style("text-anchor", "middle")
             .text(function(d) { return d.className.substring(0, d.r / 3); });
-    
+
         this.updateNodes();
-      
+
         return node;
     };
 }
