@@ -10,7 +10,7 @@ def get_connections():
         try:
             if process.get_connections() != []:
                 connections[process.name] = process.get_connections()
-        except Exception:
+        except psutil.AccessDenied:
             continue
     return connections
 
