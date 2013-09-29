@@ -1,0 +1,32 @@
+<html>
+    <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+    <script>
+        var sock = new SockJS('http://127.0.0.1:8080');
+        sock.onopen = function() {
+            console.log('open');
+        };
+        sock.onmessage = function(e) {
+            if (e.data.indexOf('listen') !== -1){
+                console.log(e.data[1]);
+                sock.send('next');
+            }
+            if (e.data.indexOf('est') !== -1){
+                console.log(e.data[1]);
+                sock.send('next');
+            }
+            // e.data = dictionary of network data
+            console.log('message', e.data);
+            // forces twisted to push next piece of data
+            sock.send('next');
+
+
+        };
+        sock.onclose = function() {
+            console.log('close');
+        };
+    </script>
+
+<body>
+    hello
+</body>
+</html>
