@@ -1,5 +1,5 @@
 import select as s
-import random
+import socket as sock
 
 from scapy.all import *
 import pygeoip
@@ -11,10 +11,12 @@ def parse_stream(stream):
     proto_layer = stream.getlayer(TCP)
     return ether_layer, IP_layer, proto_layer
 
+def get_local_ip():
+    return sock.gethostbyname(socket.gethostname())
 
 def trace_route():
     # filter should be local IP addr
-    streams = sniff(iface="en1", filter='tcp and src 10.1.56.83', count=10)
+    streams = sniff(iface="en1", filter='tcp and src %s' % get_local_ip(), count=10)
     for stream in streams:
         ether_layer, IP_layer, proto_layer = parse_stream(stream)
         destination = IP_layer.dst
