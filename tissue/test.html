@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+text {
+  font: 10px sans-serif;
+}
+
+</style>
+<body>
+
+<div id="foo">
+<button>Run</button>
+</div>
+
+
+<script src="splib.js"></script>
+<script src="bubble_chart.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+var diameter = 960;
+var svg = d3.select("body").append("svg")
+    .attr("width", diameter)
+    .attr("height", diameter)
+    .attr("class", "bubble");
+
+var bubbleChart = new BubbleChart(svg, diameter);
+
+function _addRandomNode(d) {
+    var rnd = Math.random();
+  if (rnd < 0.3) {
+    bubbleChart.addNode({"name": "Add" + Math.floor(1000 * Math.random()), "size": Math.random() * 50}, _addNode);
+  }
+  else if (rnd < 0.7) {
+    bubbleChart.addNode({"name": "Resize" + Math.floor(1000 * Math.random()), "size": Math.random() * 50}, _resizeNode);
+  }
+  else {
+    bubbleChart.addNode({"name": "Remove" + Math.floor(1000 * Math.random()), "size": Math.random() * 50}, _removeNode);
+  }
+}
+
+function _addNode(d) {
+    bubbleChart.addNode({"name": "Add" + Math.floor(1000 * Math.random()), "size": Math.random() * 50}, _addRandomNode);
+}
+
+function _removeNode(d) {
+    bubbleChart.removeNode(d);
+}
+
+function _resizeNode(d) {
+    bubbleChart.resizeNode(d, Math.random() * 50);
+}
+
+function receivedPortInformation(e) {
+  if (e[0] == "est") {
+    for (var i in e[1]) {
+        var port = e[1][i];
+        bubbleChart.addNode({"name": "Port: " + port, "size": Math.random() * 50, "id": port}, null);
+    }
+  }
+  else if (e[0] == "closed") {
+    for (var i in e[1]) {
+        var port = e[1][i];
+        var foundNode = bubbleChart.getNode("" + port)
+        bubbleChart.removeNode(foundNode);
+    }
+  }
+  else if (e[0] == "changed") {
+    for (var i in e[1]) {
+        var port = e[1][i];
+        var foundNode = bubbleChart.getNode("" + port)
+        bubbleChart.resizeNode(foundNode, Math.random() * 50);
+    }
+  }
+}
+
+var counter = 0;
+
+function removePorts() {
+    var name = bubbleChart.allbubbles.children[Math.floor(Math.random() * bubbleChart.allbubbles.children.length)].className;
+    var ports = [name];
+    receivedPortInformation(["closed", ports]);
+    resetTimer();
+}
+
+function changePorts() {
+    var name = bubbleChart.allbubbles.children[Math.floor(Math.random() * bubbleChart.allbubbles.children.length)].className;
+    var ports = [name];
+    receivedPortInformation(["changed", ports]);
+    resetTimer();
+}
+
+function resetTimer() {
+    counter += 1;
+    if (counter <= 200) {
+        var rnd = Math.random();
+        if (rnd < 0.3) {
+          window.setTimeout(createPortInformation, 1000);
+        }
+        else if (rnd < 0.7) {
+          window.setTimeout(changePorts, 1000);
+        }
+        else {
+            window.setTimeout(removePorts, 1000);
+        }
+    }
+}
+
+function createPortInformation() {
+    var numports = 1 + Math.floor(Math.random() * 5);
+    var ports = [];
+    for (var i = 0; i < numports; i++) {
+        ports.push(Math.floor(Math.random() * 32768));
+    }
+    receivedPortInformation(["est", ports]);
+    resetTimer();
+}
+
+window.setTimeout(createPortInformation, 1000);
+
+d3.select(self.frameElement).style("height", diameter + "px");
+</script>
+    
+</body>
