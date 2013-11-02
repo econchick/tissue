@@ -16,7 +16,7 @@ function WorldMap(svg, width, height) {
         .attr("class", "graticule")
         .attr("d", path);
 
-    d3.json('world-50m.json', function(error, world) {
+    d3.json('static/world-50m.json', function(error, world) {
       svg.insert("path", ".graticule")
           .datum(topojson.feature(world, world.objects.land))
           .attr("class", "land")
