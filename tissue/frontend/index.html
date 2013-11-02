@@ -2,95 +2,22 @@
 <head>
     <link rel="stylesheet" href="static/tissue.css" type="text/css">
     <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
-    <script src="static/bubble_chart.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://d3js.org/topojson.v1.min.js"></script>
-<script src="static/world_map.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="static/bubble_chart.js"></script>
+    <script src="static/open_ports_chart.js"></script>
+    <script src="static/tracerout_chart.js"></script>
+    <script src="static/world_map.js"></script>
 </head>
 <body>
     <script>
-        var diameter = 500;
-        var svg = d3.select("body").append("svg")
-            .attr("width", diameter)
-            .attr("height", diameter)
-            .attr("class", "bubble");
+        var socket = SockJS('http://127.0.0.1:8080/');
+        var svg = d3.select("body").append("svg");
+        OpenPortsChart(svg, 500, socket);
+        TracerouteChart(svg, 500, 500, socket)
 
-        var bubbleChart = new BubbleChart(svg, diameter);
+        d3.select(self.frameElement).style("height", "500px");
 
-        var sock = new SockJS('http://127.0.0.1:8080/port');
-        sock.onopen = function() {
-            // leaving this here just in case
-        };
-        sock.onmessage = function(e) {
-            if (e.data.indexOf('ESTABLISHED') !== -1){
-                for (var i in bubbleChart.allbubbles.children){
-                    var child = bubbleChart.allbubbles.children[i];
-                    if (child.value < 5){
-                        var node = bubbleChart.getNode(child.className);
-                        console.log(node)
-                        bubbleChart.resizeNode(node, child.value + 1);
-                    }
-
-                }
-                var size = 1;
-                if (bubbleChart.allbubbles.children.length == 0){
-                     size = 5;
-                }
-                for (var i in e.data[1]){
-                    var port = e.data[1][i];
-                    bubbleChart.addNode({"name": "port" + port, "size": size, "id": port}, null);
-                }
-            }
-            if (e.data.indexOf('CLOSED') !== -1){
-                console.log('CLOSED', e.data[1]);
-                for (var i in e.data[1]){
-                    var port = e.data[1][i];
-                    var node = bubbleChart.getNode(port);
-                    bubbleChart.removeNode(node);
-                }
-            }
-            // e.data = dictionary of network data
-            console.log('message', e.data);
-
-        };
-        sock.onclose = function() {
-            // leaving this here just in case
-        };
-    </script>
-    <script>
-        var width = 500,
-            height = 500;
-
-        var svg = d3.select("body").append("svg")
-            .attr("width", width)
-            .attr("height", height);
-
-        var worldMap = new WorldMap(svg, width, height);
-
-        d3.select(self.frameElement).style("height", height + "px");
-
-        var sock = new SockJS('http://127.0.0.1:8080/sniff');
-        sock.onopen = function() {
-            // leaving this here just in case
-        };
-        sock.onmessage = function(e) {
-            if (e.data.indexOf('TRACE') !== -1){
-                console.log('TRACE', e.data);
-                for (var i = 0; i < e.data[2].length - 1; i++) {
-                    var from = e.data[2][i];
-                    var to = e.data[2][i + 1];
-                    console.log(from);
-                    console.log(to);
-                    worldMap.addLine(from, to, "green")
-                }
-            }
-            // e.data = dictionary of network data
-            console.log('message', e.data);
-
-        };
-        sock.onclose = function() {
-            // leaving this here just in case
-        };
     </script>
 </body>
 </html>
