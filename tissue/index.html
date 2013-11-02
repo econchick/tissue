@@ -17,7 +17,7 @@
 
         var bubbleChart = new BubbleChart(svg, diameter);
 
-        var sock = new SockJS('http://127.0.0.1:8080');
+        var sock = new SockJS('http://127.0.0.1:8080/port');
         sock.onopen = function() {
             // leaving this here just in case
         };
@@ -49,6 +49,31 @@
                     bubbleChart.removeNode(node);
                 }
             }
+            // e.data = dictionary of network data
+            console.log('message', e.data);
+
+        };
+        sock.onclose = function() {
+            // leaving this here just in case
+        };
+    </script>
+    <script>
+        var width = 500,
+            height = 500;
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        var worldMap = new WorldMap(svg, width, height);
+
+        d3.select(self.frameElement).style("height", height + "px");
+
+        var sock = new SockJS('http://127.0.0.1:8080/sniff');
+        sock.onopen = function() {
+            // leaving this here just in case
+        };
+        sock.onmessage = function(e) {
             if (e.data.indexOf('TRACE') !== -1){
                 console.log('TRACE', e.data);
                 for (var i = 0; i < e.data[2].length - 1; i++) {
@@ -66,17 +91,6 @@
         sock.onclose = function() {
             // leaving this here just in case
         };
-
-var width = 500,
-    height = 500;
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-var worldMap = new WorldMap(svg, width, height);
-
-d3.select(self.frameElement).style("height", height + "px");
     </script>
 </body>
 </html>

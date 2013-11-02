@@ -4,7 +4,7 @@ from twisted.internet import reactor
 from twisted.internet.protocol import Factory, Protocol
 from twisted.internet.task import LoopingCall
 from twisted.python import log
-from txsockjs.factory import SockJSFactory
+from txsockjs.factory import SockJSMultiFactory
 
 from ports import ports
 from sniff import trace_route, map_ip
@@ -22,15 +22,13 @@ class PortStatus(object):
         return new_ports, closed_ports
 
 
-class PCAPProtocol(Protocol):
+class PortProtocol(Protocol):
     def __init__(self):
         self.port_status = PortStatus()
 
     def connectionMade(self):
         lp = LoopingCall(self.update_ports, status='ESTABLISHED')
-        gc = LoopingCall(self.get_coordinates)
         lp.start(1)
-        gc.start(4, now=False)
 
     def dataReceived(self, data):
         pass
@@ -45,6 +43,15 @@ class PCAPProtocol(Protocol):
         if closed_ports:
             self.write_to_socket('CLOSED', closed_ports)
 
+
+class SniffProtocol(Protocol):
+    def connectionMade(self):
+        gc = LoopingCall(self.get_coordinates)
+        gc.start(4, now=False)
+
+    def dataReceived(self, data):
+        pass
+
     def write_coordinates(self, key, port, data):
         self.transport.write((key, port, data))
 
@@ -56,7 +63,11 @@ class PCAPProtocol(Protocol):
         self.write_coordinates('TRACE', sport, coordinates)
 
 
-
 log.startLogging(sys.stdout)
-reactor.listenTCP(8080, SockJSFactory(Factory.forProtocol(PCAPProtocol)))
+
+f = SockJSMultiFactory()
+f.addFactory(Factory.forProtocol(PortProtocol), "port")
+f.addFactory(Factory.forProtocol(SniffProtocol), "sniff")
+
+reactor.listenTCP(8080, f)
 reactor.run()

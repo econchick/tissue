@@ -4,13 +4,13 @@ MarkupSafe==0.18
 Pyrex==0.9.8.6
 Twisted==13.1.0
 Werkzeug==0.9.4
-dnet==1.12
-dpkt==1.8
+#dnet==1.12
+#dpkt==1.8
 itsdangerous==0.23
 psutil==1.1.0
 pyOpenSSL==0.13.1
 pygeoip==0.2.7
-pylibpcap==0.6.2
+#pylibpcap==0.6.2
 txsockjs==1.2.1
 wsgiref==0.1.2
 zope.interface==4.0.5
