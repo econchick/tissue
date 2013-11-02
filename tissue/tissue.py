@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 
 from twisted.internet import reactor
@@ -54,7 +55,6 @@ class PCAPProtocol(Protocol):
         print "traceroute = ", traceroute
         print "coordinates = ", coordinates
         self.write_coordinates('TRACE', sport, coordinates)
-
 
 
 log.startLogging(sys.stdout)

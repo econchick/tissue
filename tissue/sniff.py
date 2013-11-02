@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import select as s
 import socket as sock
 
