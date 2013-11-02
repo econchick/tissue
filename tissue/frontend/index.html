@@ -6,15 +6,14 @@
     <script src="http://d3js.org/topojson.v1.min.js"></script>
     <script src="static/bubble_chart.js"></script>
     <script src="static/open_ports_chart.js"></script>
-    <script src="static/tracerout_chart.js"></script>
+    <script src="static/traceroute_chart.js"></script>
     <script src="static/world_map.js"></script>
 </head>
 <body>
     <script>
-        var socket = SockJS('http://127.0.0.1:8080/');
-        var svg = d3.select("body").append("svg");
-        OpenPortsChart(svg, 500, socket);
-        TracerouteChart(svg, 500, 500, socket)
+        var socket = SockJS('http://127.0.0.1:8080/port');
+        OpenPortsChart(d3.select("body").append("svg"), 500, socket);
+        //TracerouteChart(d3.select("body").append("svg"), 500, 500, socket);
 
         d3.select(self.frameElement).style("height", "500px");
 
