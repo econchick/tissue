@@ -6,11 +6,11 @@ function OpenPortsChart(svg, diameter) {
     var bubbleChart = new BubbleChart(svg, diameter);
 
     function isEstablishedMessage(e) {
-        return e.data.indexOf('ESTABLISHED') !== -1;
+        return e.data != null && e.data.indexOf('ESTABLISHED') !== -1;
     }
 
     function isClosedMessage(e) {
-        return e.data.indexOf('CLOSED') !== -1;
+        return e.data != null && e.data.indexOf('CLOSED') !== -1;
     }
 
     var MAX_NODE_SIZE = 5;

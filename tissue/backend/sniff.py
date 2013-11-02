@@ -6,19 +6,40 @@ from scapy.all import *
 import pygeoip
 
 
+class StreamData(object):
+    def __init__(self):
+        pass
+
+    def add_packet(self):
+        pass
+
+
 def parse_stream(stream):
     ether_layer = stream.getlayer(Ether)
     IP_layer = stream.getlayer(IP)
     proto_layer = stream.getlayer(TCP)
     return ether_layer, IP_layer, proto_layer
 
+
 def get_local_ip():
     return sock.gethostbyname(socket.gethostname())
 
-def trace_route():
-    # filter should be local IP addr
-    streams = sniff(iface="en0", filter='tcp and src %s' % get_local_ip(), count=10)
+
+def get_streams():
+    return sniff(iface="en0", filter='tcp and src %s' % get_local_ip(), count=10)
+
+
+def through_put(stream_data):
+    streams = tissue_sniff()
+    data = []
     for stream in streams:
+        stream_data.add_stream(stream)
+
+    return data
+
+
+def trace_route():
+    for stream in get_streams():
         ether_layer, IP_layer, proto_layer = parse_stream(stream)
         destination = IP_layer.dst
         src = IP_layer.src
@@ -39,7 +60,7 @@ def trace_route():
 
 
 def map_ip(hops):
-    gip = pygeoip.GeoIP('../GeoLiteCity.dat')
+    gip = pygeoip.GeoIP('../data/GeoLiteCity.dat')
     coordinates = []
     for hop in hops:
         geo_data = gip.record_by_addr(hop)

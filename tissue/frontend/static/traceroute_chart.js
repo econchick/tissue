@@ -5,7 +5,7 @@ function TracerouteChart(svg, width, height) {
     var worldMap = new WorldMap(svg, width, height);
 
     function isTraceMessage(e) {
-        return e.data.indexOf('TRACE') !== -1;
+        return e.data != null && e.data.indexOf('TRACE') !== -1;
     }
 
     this.receivedData = function(e) {
