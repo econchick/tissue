@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import select as s
 import socket as sock
 
@@ -16,7 +17,7 @@ def get_local_ip():
 
 def trace_route():
     # filter should be local IP addr
-    streams = sniff(iface="en1", filter='tcp and src %s' % get_local_ip(), count=10)
+    streams = sniff(iface="en0", filter='tcp and src %s' % get_local_ip(), count=10)
     for stream in streams:
         ether_layer, IP_layer, proto_layer = parse_stream(stream)
         destination = IP_layer.dst
@@ -38,7 +39,7 @@ def trace_route():
 
 
 def map_ip(hops):
-    gip = pygeoip.GeoIP('/Users/lynnroot/Dev/tissue/GeoLiteCity.dat')
+    gip = pygeoip.GeoIP('../GeoLiteCity.dat')
     coordinates = []
     for hop in hops:
         geo_data = gip.record_by_addr(hop)

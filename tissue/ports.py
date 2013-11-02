@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import psutil
 
 
@@ -16,6 +17,7 @@ def get_connections():
             continue
     return connections
 
+
 def get_ports(connections, status):
     """
     Iterates over connections and returns unique ports for a given
@@ -32,6 +34,7 @@ def get_ports(connections, status):
                 ports.append(port)
 
     return list(set(ports))
+
 
 def ports(status):
     connections = get_connections()
