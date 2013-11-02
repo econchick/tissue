@@ -1,4 +1,4 @@
-function OpenPortsChart(svg, diameter, websocket) {
+function OpenPortsChart(svg, diameter) {
     svg.attr("width", diameter)
         .attr("height", diameter)
         .attr("class", "bubble");
@@ -54,7 +54,7 @@ function OpenPortsChart(svg, diameter, websocket) {
         }
     }
 
-    websocket.onmessage = function(e) {
+    this.receivedData = function(e) {
         if (isEstablishedMessage(e)) {
             resizeExistingBubbles(bubbleChart);
             createNewBubbles(e, bubbleChart);

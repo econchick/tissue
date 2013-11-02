@@ -1,4 +1,4 @@
-function TracerouteChart(svg, width, height, websocket) {
+function TracerouteChart(svg, width, height) {
     svg.attr("width", width)
         .attr("height", height);
 
@@ -8,7 +8,7 @@ function TracerouteChart(svg, width, height, websocket) {
         return e.data.indexOf('TRACE') !== -1;
     }
 
-    websocket.onmessage = function(e) {
+    this.receivedData = function(e) {
         if (isTraceMessage(e) ){
             for (var i = 0; i < e.data[2].length - 1; i++) {
                 var from = e.data[2][i];
