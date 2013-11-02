@@ -12,8 +12,14 @@
 <body>
     <script>
         var socket = SockJS('http://127.0.0.1:8080/port');
-        OpenPortsChart(d3.select("body").append("svg"), 500, socket);
-        //TracerouteChart(d3.select("body").append("svg"), 500, 500, socket);
+
+        var portsChart = OpenPortsChart(d3.select("body").append("svg"), 500);
+        var tracerouteChart = TracerouteChart(d3.select("body").append("svg"), 500, 500);
+
+        socket.onmessage = function(e) {
+            portsChart.receivedData(e);
+            tracerouteChart.receivedData(e);
+        };
 
         d3.select(self.frameElement).style("height", "500px");
 
