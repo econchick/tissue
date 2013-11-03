@@ -13,34 +13,30 @@ from yapsy.PluginManager import PluginManager
 class SniffProtocol(Protocol):
     DEFAULT_PLUGIN_PATHS = ['plugins']
     PLUGIN_REGISTRATION_MESSAGE = 'REGISTER-PLUGIN'
+    REFRESH_PERIOD = 2
 
     def __init__(self):
         self.manager = PluginManager()
         self.manager.setPluginPlaces(SniffProtocol.DEFAULT_PLUGIN_PATHS)
         self.manager.collectPlugins()
 
-    def connectionMade(self):
-        for plugin in self.manager.getAllPlugins():
-          self.blockingWrite(
-              [SniffProtocol.PLUGIN_REGISTRATION_MESSAGE,
-               plugin.plugin_object.getInformation())])
-
-        main_loop = LoopingCall(self.updated_data)
-        main_loop.start(2, now=False)
-
-    def blockingWrite(self, results):
+    def _blocking_write(self, results):
         for result in results:
             self.transport.write(result)
 
-    def get_data(self, plugin):
-        return plugin.receivedData()
+    def connectionMade(self):
+        for plugin in self.manager.getAllPlugins():
+          self._blocking_write(
+              [(SniffProtocol.PLUGIN_REGISTRATION_MESSAGE,
+               plugin.plugin_object.getInformation())])
+
+        main_loop = LoopingCall(self.updated_data)
+        main_loop.start(SniffProtocol.REFRESH_PERIOD, now=False)
 
     def updated_data(self):
         for plugin in self.manager.getAllPlugins():
-            d = threads.deferToThread(self.get_data, plugin.plugin_object)
-            d.addCallback(self.blockingWrite)
-
-log.startLogging(sys.stdout)
+            d = threads.deferToThread(plugin.plugin_object.update)
+            d.addCallback(self._blocking_write)
 
 f = SockJSMultiFactory()
 f.addFactory(Factory.forProtocol(SniffProtocol), 'sniff')

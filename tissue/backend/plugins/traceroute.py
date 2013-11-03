@@ -8,19 +8,16 @@ from yapsy.IPlugin import IPlugin
 
 
 class TraceroutePlugin(IPlugin):
-    name = "Trace Route"
-
     def __init__(self):
         self.working = False
 
-    def receivedData(self):
+    def update(self):
         if self.working:
             return []
         self.working = True
         traceroute, sport = trace_route()
         coordinates = map_ip(traceroute)
         self.working = False
-        print [('TRACE', sport, coordinates)]
         return [('TRACE', sport, coordinates)]
 
     def getInformation(self):
