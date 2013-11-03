@@ -1,0 +1,9 @@
+[Core]
+Name = port
+Module = port
+
+[Documentation]
+Author = Lynn Root
+Version = 0.1
+Website = http://tissue.sh
+Description = Detects local open ports.
