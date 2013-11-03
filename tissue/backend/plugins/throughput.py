@@ -20,7 +20,12 @@ class ThroughputPlugin(IPlugin):
         print results
         return results
 
-    def getFrontendCode(self):
+    def getInformation(self):
         with open('plugins/throughput.js', 'r') as content_file:
             content = content_file.read()
-        return ("ThroughputChart", content)
+        return {
+            'MainClass': 'ThroughputChart',
+            'Code': content,
+            'GridWidth': 1,
+            'GridHeight': 1
+        }

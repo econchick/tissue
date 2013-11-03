@@ -41,7 +41,7 @@
             }
         }
 
-        function addPlugin(plugin_definition) {
+        function addPlugin(pluginInfo) {
           if (counter % 2 == 0) {
             row = container.append("div").attr("class", "card_row");
           }
@@ -50,10 +50,8 @@
           var card = cell.append("div").attr("class", "card with-3d-shadow with-transitions");
           var header = card.append("div").attr("class", "card_header");
           var content = card.append("div");
-          var plugin_class = plugin_definition[0];
-          var plugin_code = plugin_definition[1];
-          addScript(plugin_code);
-          var plugin = "new " + plugin_class + "(content.append('svg'), 500, 500)";
+          addScript(pluginInfo.Code);
+          var plugin = "new " + pluginInfo.MainClass + "(content.append('svg'), 500, 500)";
           plugin = eval(plugin);
           plugin_instances.push(plugin);
         }
