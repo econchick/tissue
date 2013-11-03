@@ -18,7 +18,7 @@ class SniffProtocol(Protocol):
 
     def connectionMade(self):
         for plugin in self.manager.getAllPlugins():
-          self.blockingWrite([('REGISTER-PLUGIN', plugin.plugin_object.getFrontendCode())])
+          self.blockingWrite([('REGISTER-PLUGIN', plugin.plugin_object.getInformation())])
 
         main_loop = LoopingCall(self.updated_data)
         main_loop.start(2, now=False)
