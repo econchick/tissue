@@ -10,20 +10,54 @@
     <script src="static/world_map.js"></script>
 </head>
 <body>
+    <div class="header">
+        <div class="header-logo">
+            <a href="http://tissue.sh">tissue</a>
+        </div>
+    </div>
+    <div class="mainContent" id="mainContent">
+        <div class="cardContainer" id="mainContainer" style="display: table">
+        </div>
+    </div>
+
     <script>
-        var socket = new SockJS('http://127.0.0.1:8800/sniff');
-        console.log('blah');
-        var portsChart = new OpenPortsChart(d3.select("body").append("svg"), 500);
-        var tracerouteChart = new TracerouteChart(d3.select("body").append("svg"), 500, 500);
+        var socket = new SockJS('http://192.168.1.130:8081/sniff');
+
+        var plugins = [
+            OpenPortsChart,
+            TracerouteChart
+        ];
+
+        var plugin_instances = [];
+
+        var counter = 0;
+        var container = d3.select("#mainContainer");
+        var row = null;
+
+        for (var i in plugins) {
+          var plugin_def = plugins[i];
+          if (counter % 2 == 0) {
+            row = container.append("div").attr("class", "card_row");
+            console.log(container);
+            console.log(row);
+          }
+          counter++;
+          var cell = row.append("div").attr("class", "card_cell");
+          var card = cell.append("div").attr("class", "card with-3d-shadow with-transitions");
+          var header = card.append("div").attr("class", "card_header");
+          var content = card.append("div");
+          var plugin = new plugin_def(content.append("svg"), 500, 500);
+          plugin_instances.push(plugin);
+        }
 
         socket.onmessage = function(e) {
-            console.log(e);
-            console.log(portsChart);
-            portsChart.receivedData(e);
-            tracerouteChart.receivedData(e);
+            for (var i in plugin_instances) {
+                var plugin = plugin_instances[i];
+                plugin.receivedData(e);
+            }
         };
-        d3.select(self.frameElement).style("height", "500px");
 
+        d3.select(self.frameElement).style("height", "500px");
     </script>
 </body>
 </html>
