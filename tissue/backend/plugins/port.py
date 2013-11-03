@@ -3,7 +3,6 @@ import psutil
 from yapsy.IPlugin import IPlugin
 
 
-
 class PortStatus(object):
     def __init__(self):
         self.open_ports = set()
@@ -17,20 +16,16 @@ class PortStatus(object):
 
 
 class PortsPlugin(IPlugin):
-    name = "port"
-
     def __init__(self):
         self.port_status = PortStatus()
 
-    def receivedData(self):
-        #self.d = defer.Deferred()
+    def update(self):
         scanned_ports = ports("ESTABLISHED")
         new_ports, closed_ports = self.port_status.update(scanned_ports)
         return_values = []
         return_values.append(("ESTABLISHED", new_ports))
         if closed_ports:
             return_values.append(('CLOSED', closed_ports))
-        print return_values
         return return_values
 
     def getInformation(self):

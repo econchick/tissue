@@ -1,15 +1,15 @@
 from collections import defaultdict
+import socket as sock
 
+from scapy.all import *
 from yapsy.IPlugin import IPlugin
-
-from sniff import get_streams
 
 
 class ThroughputPlugin(IPlugin):
     def __init__(self):
         self.stats = defaultdict(int)
 
-    def receivedData(self):
+    def update(self):
         packets = get_streams()
         throughput_data = defaultdict(int)
         for packet in packets:
@@ -17,7 +17,6 @@ class ThroughputPlugin(IPlugin):
             throughput_data[IP_layer.dst] += IP_layer.len
 
         results = [('THROUGHPUT-DATA', throughput_data.items())]
-        print results
         return results
 
     def getInformation(self):
@@ -29,3 +28,11 @@ class ThroughputPlugin(IPlugin):
             'GridWidth': 1,
             'GridHeight': 1
         }
+
+
+def get_local_ip():
+    return sock.gethostbyname(socket.gethostname())
+
+
+def get_streams():
+    return sniff(iface="en0", filter='tcp and src %s' % get_local_ip(), count=10)
