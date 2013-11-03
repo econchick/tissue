@@ -1,9 +1,9 @@
-function ThroughputChart(svg, diameter) {
-    svg.attr("width", diameter)
-        .attr("height", diameter)
+function ThroughputChart(svg, width, height) {
+    svg.attr("width", width)
+        .attr("height", height)
         .attr("class", "bubble");
 
-    var bubbleChart = new BubbleChart(svg, diameter);
+    var bubbleChart = new BubbleChart(svg, width);
 
     function isThroughputMessage(e) {
         return e.data != null && e.data.indexOf('THROUGHPUT-DATA') !== -1;

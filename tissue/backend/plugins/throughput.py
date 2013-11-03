@@ -19,3 +19,8 @@ class ThroughputPlugin(IPlugin):
         results = [('THROUGHPUT-DATA', throughput_data.items())]
         print results
         return results
+
+    def getFrontendCode(self):
+        with open('plugins/throughput.js', 'r') as content_file:
+            content = content_file.read()
+        return ("ThroughputChart", content)
