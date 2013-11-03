@@ -1,17 +1,10 @@
 # -*- coding: utf-8 -*-
+
 import select as s
 import socket as sock
 
 from scapy.all import *
 import pygeoip
-
-
-class StreamData(object):
-    def __init__(self):
-        pass
-
-    def add_packet(self):
-        pass
 
 
 def parse_stream(stream):
@@ -27,15 +20,6 @@ def get_local_ip():
 
 def get_streams():
     return sniff(iface="en0", filter='tcp and src %s' % get_local_ip(), count=10)
-
-
-def through_put(stream_data):
-    streams = tissue_sniff()
-    data = []
-    for stream in streams:
-        stream_data.add_stream(stream)
-
-    return data
 
 
 def trace_route():
