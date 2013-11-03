@@ -16,6 +16,6 @@ class ThroughputPlugin(IPlugin):
             IP_layer = packet.getlayer('IP')
             throughput_data[IP_layer.dst] += IP_layer.len
 
-        results = ('THROUGHPUT-DATA', throughput_data.items())
+        results = [('THROUGHPUT-DATA', throughput_data.items())]
         print results
         return results

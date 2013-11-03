@@ -42,5 +42,5 @@ log.startLogging(sys.stdout)
 f = SockJSMultiFactory()
 f.addFactory(Factory.forProtocol(SniffProtocol), 'sniff')
 
-reactor.listenTCP(8081, f)
+reactor.listenTCP(8800, f)
 reactor.run()
