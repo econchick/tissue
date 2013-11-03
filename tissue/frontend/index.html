@@ -11,19 +11,21 @@
 </head>
 <body>
     <script>
-        var socket = new SockJS('http://127.0.0.1:8080/sniff');
-        console.log('blah');
-        var portsChart = new OpenPortsChart(d3.select("body").append("svg"), 500);
-        var tracerouteChart = new TracerouteChart(d3.select("body").append("svg"), 500, 500);
+        var socket = new SockJS('http://192.168.1.130:8081/sniff');
+
+        var plugins = [
+            new OpenPortsChart(d3.select("body").append("svg"), 500),
+            new TracerouteChart(d3.select("body").append("svg"), 500, 500)
+        ];
 
         socket.onmessage = function(e) {
-            console.log(e);
-            console.log(portsChart);
-            portsChart.receivedData(e);
-            tracerouteChart.receivedData(e);
+            for (var i in plugins) {
+                var plugin = plugins[i];
+                plugin.receivedData(e);
+            }
         };
-        d3.select(self.frameElement).style("height", "500px");
 
+        d3.select(self.frameElement).style("height", "500px");
     </script>
 </body>
 </html>
