@@ -11,7 +11,7 @@
 </head>
 <body>
     <script>
-        var socket = new SockJS('http://127.0.0.1:8080/sniff');
+        var socket = new SockJS('http://127.0.0.1:8800/sniff');
         console.log('blah');
         var portsChart = new OpenPortsChart(d3.select("body").append("svg"), 500);
         var tracerouteChart = new TracerouteChart(d3.select("body").append("svg"), 500, 500);
