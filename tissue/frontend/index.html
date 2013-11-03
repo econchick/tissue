@@ -5,9 +5,6 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://d3js.org/topojson.v1.min.js"></script>
     <script src="static/bubble_chart.js"></script>
-    <script src="static/open_ports_chart.js"></script>
-    <script src="static/traceroute_chart.js"></script>
-    <script src="static/throughput_chart.js"></script>
     <script src="static/world_map.js"></script>
 </head>
 <body>
@@ -22,40 +19,52 @@
     </div>
 
     <script>
-        var socket = new SockJS('http://127.0.0.1:8800/sniff');
+        var socket = new SockJS('http://192.168.1.130:8801/sniff');
 
-        var plugins = [
-            OpenPortsChart,
-            TracerouteChart,
-            ThroughputChart
-        ];
-
+        var plugins = [];
         var plugin_instances = [];
 
         var counter = 0;
         var container = d3.select("#mainContainer");
         var row = null;
 
-        for (var i in plugins) {
-          var plugin_def = plugins[i];
+        function addScript(code) {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+
+            try {
+                s.appendChild(document.createTextNode(code));
+                document.body.appendChild(s);
+            } catch (e) {
+                s.text = code;
+                document.body.appendChild(s);
+            }
+        }
+
+        function addPlugin(plugin_definition) {
           if (counter % 2 == 0) {
             row = container.append("div").attr("class", "card_row");
-            console.log(container);
-            console.log(row);
           }
           counter++;
           var cell = row.append("div").attr("class", "card_cell");
           var card = cell.append("div").attr("class", "card with-3d-shadow with-transitions");
           var header = card.append("div").attr("class", "card_header");
           var content = card.append("div");
-          var plugin = new plugin_def(content.append("svg"), 500, 500);
+          var plugin_class = plugin_definition[0];
+          var plugin_code = plugin_definition[1];
+          addScript(plugin_code);
+          var plugin = "new " + plugin_class + "(content.append('svg'), 500, 500)";
+          plugin = eval(plugin);
           plugin_instances.push(plugin);
         }
 
         socket.onmessage = function(e) {
+            if (e.data[0] === "REGISTER-PLUGIN") {
+                addPlugin(e.data[1]);
+            }
+
             for (var i in plugin_instances) {
                 var plugin = plugin_instances[i];
-console.log(e);
                 plugin.receivedData(e);
             }
         };

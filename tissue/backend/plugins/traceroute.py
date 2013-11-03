@@ -13,14 +13,6 @@ class TraceroutePlugin(IPlugin):
     def __init__(self):
         self.working = False
 
-    def activate(self):
-        super(TraceroutePlugin, self).activate()
-        print "activated"
-
-    def deactivate(self):
-        super(TraceroutePlugin, self).deactivate()
-        print "deactivated"
-
     def receivedData(self):
         if self.working:
             return []
@@ -31,6 +23,10 @@ class TraceroutePlugin(IPlugin):
         print [('TRACE', sport, coordinates)]
         return [('TRACE', sport, coordinates)]
 
+    def getFrontendCode(self):
+        with open('plugins/traceroute.js', 'r') as content_file:
+            content = content_file.read()
+        return ("TracerouteChart", content)
 
 def parse_stream(stream):
     ether_layer = stream.getlayer(Ether)
