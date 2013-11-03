@@ -1,0 +1,9 @@
+[Core]
+Name = Trace Route
+Module = traceroute
+
+[Documentation]
+Author = Lynn Root
+Version = 0.1
+Website = http://tissue.sh
+Description = Gets latitude/longitude coorindates of connections via traceroute.

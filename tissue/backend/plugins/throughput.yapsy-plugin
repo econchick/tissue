@@ -1,0 +1,9 @@
+[Core]
+Name = throughput
+Module = throughput
+
+[Documentation]
+Author = Lynn Root
+Version = 0.1
+Website = http://tissue.sh
+Description = Collects packet sizes being sent locally.
