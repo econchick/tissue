@@ -72,7 +72,7 @@ function BubbleChart(svg, diameter) {
     };
 
     this.addNode = function(newnode, onclick) {
-        this.allbubbles.children.push({packageName: null, className: "" + newnode.id, value: newnode.size});
+        this.allbubbles.children.push({packageName: null, className: "" + newnode.id, value: newnode.size, title: newnode.title});
 
         var node = svg.selectAll(".node")
             .data(this.bubble.nodes(this.allbubbles)
@@ -97,7 +97,7 @@ function BubbleChart(svg, diameter) {
             .attr("dy", ".3em")
             .style("text-anchor", "middle")
             .style("fill", "#272727")
-            .text(function(d) { return d.className.substring(0, d.r / 3); });
+            .text(function(d) { return d.title; });
 
         this.updateNodes();
 

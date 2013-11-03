@@ -34,7 +34,7 @@ class ThroughputPlugin(object):
             IP_layer = packet.getlayer('IP')
             throughput_data[IP_layer.dst] += IP_layer.len
 
-        results = ('THROUGHPUT-DATA', throughput_data.items())
+        results = [('THROUGHPUT-DATA', throughput_data.items())]
         print results
         return results
 
@@ -106,5 +106,5 @@ log.startLogging(sys.stdout)
 f = SockJSMultiFactory()
 f.addFactory(Factory.forProtocol(SniffProtocol), 'sniff')
 
-reactor.listenTCP(8800, f)
+reactor.listenTCP(8081, f)
 reactor.run()
