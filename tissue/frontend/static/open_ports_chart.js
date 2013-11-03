@@ -39,6 +39,7 @@ function OpenPortsChart(svg, width, height) {
         var extractedPorts = extractPorts(e);
         for (var port in extractedPorts){
             bubbleChart.addNode({
+                "title": extractedPorts[port],
                 "name": "port" + port,
                 "size": 1,
                 "id": extractedPorts[port]

@@ -7,6 +7,7 @@
     <script src="static/bubble_chart.js"></script>
     <script src="static/open_ports_chart.js"></script>
     <script src="static/traceroute_chart.js"></script>
+    <script src="static/throughput_chart.js"></script>
     <script src="static/world_map.js"></script>
 </head>
 <body>
@@ -25,7 +26,8 @@
 
         var plugins = [
             OpenPortsChart,
-            TracerouteChart
+            TracerouteChart,
+            ThroughputChart
         ];
 
         var plugin_instances = [];
@@ -53,6 +55,7 @@
         socket.onmessage = function(e) {
             for (var i in plugin_instances) {
                 var plugin = plugin_instances[i];
+console.log(e);
                 plugin.receivedData(e);
             }
         };
