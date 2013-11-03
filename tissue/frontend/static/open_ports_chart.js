@@ -1,9 +1,9 @@
-function OpenPortsChart(svg, diameter) {
-    svg.attr("width", diameter)
-        .attr("height", diameter)
+function OpenPortsChart(svg, width, height) {
+    svg.attr("width", width)
+        .attr("height", height)
         .attr("class", "bubble");
 
-    var bubbleChart = new BubbleChart(svg, diameter);
+    var bubbleChart = new BubbleChart(svg, width);
 
     function isEstablishedMessage(e) {
         return e.data != null && e.data.indexOf('ESTABLISHED') !== -1;
