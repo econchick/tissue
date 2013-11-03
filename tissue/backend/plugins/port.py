@@ -33,10 +33,15 @@ class PortsPlugin(IPlugin):
         print return_values
         return return_values
 
-    def getFrontendCode(self):
+    def getInformation(self):
         with open('plugins/port.js', 'r') as content_file:
             content = content_file.read()
-        return ("OpenPortsChart", content)
+        return {
+            'MainClass': 'OpenPortsChart',
+            'Code': content,
+            'GridWidth': 1,
+            'GridHeight': 1
+        }
 
 
 def get_connections():

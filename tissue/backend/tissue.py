@@ -23,7 +23,7 @@ class SniffProtocol(Protocol):
         for plugin in self.manager.getAllPlugins():
           self.blockingWrite(
               [SniffProtocol.PLUGIN_REGISTRATION_MESSAGE,
-               plugin.plugin_object.getFrontendCode())])
+               plugin.plugin_object.getInformation())])
 
         main_loop = LoopingCall(self.updated_data)
         main_loop.start(2, now=False)

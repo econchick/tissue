@@ -23,10 +23,15 @@ class TraceroutePlugin(IPlugin):
         print [('TRACE', sport, coordinates)]
         return [('TRACE', sport, coordinates)]
 
-    def getFrontendCode(self):
+    def getInformation(self):
         with open('plugins/traceroute.js', 'r') as content_file:
             content = content_file.read()
-        return ("TracerouteChart", content)
+        return {
+            'MainClass': 'TracerouteChart',
+            'Code': content,
+            'GridWidth': 2,
+            'GridHeight': 1
+        }
 
 def parse_stream(stream):
     ether_layer = stream.getlayer(Ether)
