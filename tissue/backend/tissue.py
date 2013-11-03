@@ -8,7 +8,7 @@ from twisted.python import log
 from txsockjs.factory import SockJSMultiFactory
 
 from ports import ports
-from sniff import trace_route, map_ip, get_streams, parse_stream
+from sniff import trace_route, map_ip, get_streams
 
 
 class PortStatus(object):
@@ -29,12 +29,14 @@ class ThroughputPlugin(object):
 
     def receivedData(self):
         packets = get_streams()
+        throughput_data = defaultdict(int)
         for packet in packets:
             IP_layer = packet.getlayer('IP')
-            print IP_layer.dst
-            print IP_layer.len
+            throughput_data[IP_layer.dst] += IP_layer.len
 
-        return []
+        results = ('THROUGHPUT-DATA', throughput_data.items())
+        print results
+        return results
 
 
 class PortsPlugin(object):
@@ -71,7 +73,8 @@ class TraceroutePlugin(object):
 class SniffProtocol(Protocol):
     def __init__(self):
         #self.plugins = [PortsPlugin(), TraceroutePlugin(), ThroughputPlugin()]
-        self.plugins = [PortsPlugin(), TraceroutePlugin()]
+        #self.plugins = [PortsPlugin(), TraceroutePlugin()]
+        self.plugins = [PortsPlugin(), ThroughputPlugin(), TraceroutePlugin()]
 
     def connectionMade(self):
         main_loop = LoopingCall(self.updated_data)
