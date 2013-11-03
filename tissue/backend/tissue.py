@@ -22,78 +22,32 @@ class PortStatus(object):
         return new_ports, closed_ports
 
 
-class PortProtocol(Protocol):
-    def __init__(self):
-        self.port_status = PortStatus()
-
-    def connectionMade(self):
-        lp = LoopingCall(self.update_ports, status='ESTABLISHED')
-        lp.start(1)
-
-    def dataReceived(self, data):
-        pass
-
-    def write_to_socket(self, key, data):
-        self.transport.write((key, data))
-
-    def update_ports(self, status):
-        scanned_ports = ports(status)
-        new_ports, closed_ports = self.port_status.update(scanned_ports)
-        self.write_to_socket(status, new_ports)
-        print new_ports, closed_ports
-        if closed_ports:
-            self.write_to_socket('CLOSED', closed_ports)
-
-
-class TracerouteProtocol(Protocol):
-    def connectionMade(self):
-        gc = LoopingCall(self.get_coordinates)
-        gc.start(4, now=False)
-
-    def dataReceived(self, data):
-        pass
-
-    def write_coordinates(self, key, port, data):
-        self.transport.write((key, port, data))
-
-    def get_coordinates(self):
-        traceroute, sport = trace_route()
-        coordinates = map_ip(traceroute)
-        print "traceroute = ", traceroute
-        print "coordinates = ", coordinates
-        self.write_coordinates('TRACE', sport, coordinates)
-
-
 class PortsPlugin(object):
     def __init__(self):
         self.port_status = PortStatus()
 
-    def receivedData(self, socket):
+    def receivedData(self):
         scanned_ports = ports("ESTABLISHED")
         new_ports, closed_ports = self.port_status.update(scanned_ports)
-        print "sending"
-        socket.transport.write(("ESTABLISHED", new_ports))
-        print "sent"
-        print new_ports, closed_ports
+        return_values = []
+        return_values.append(("ESTABLISHED", new_ports))
         if closed_ports:
-            socket.transport.write(('CLOSED', closed_ports))
+            return_values.append(('CLOSED', closed_ports))
+        return return_values
 
 
 class TraceroutePlugin(object):
     def __init__(self):
         self.working = False
 
-    def receivedData(self, socket):
+    def receivedData(self):
         if self.working:
-            return
+            return []
         self.working = True
         traceroute, sport = trace_route()
         coordinates = map_ip(traceroute)
-        print "traceroute = ", traceroute
-        print "coordinates = ", coordinates
-        return ('TRACE', sport, coordinates)
-#        socket.transport.write(('TRACE', sport, coordinates))
-#        self.working = False
+        return [('TRACE', sport, coordinates)]
+        self.working = False
 
 
 class SniffProtocol(Protocol):
@@ -101,26 +55,21 @@ class SniffProtocol(Protocol):
         self.plugins = [PortsPlugin(), TraceroutePlugin()]
 
     def connectionMade(self):
-        print 'blahblah'
         main_loop = LoopingCall(self.updated_data)
         main_loop.start(2, now=False)
-        print 'bar'
 
-    def blockingWrite(self, data):
-        self.transport.write(data)
+    def blockingWrite(self, results):
+        for result in results:
+            self.transport.write(result)
 
     def get_data(self, plugin):
-        result = plugin.receivedData(self)
+        result = plugin.receivedData()
         reactor.callFromThread(self.blockingWrite, result)
 
     def updated_data(self):
-        #streams = get_streams()
-        print 'updated data'
         for plugin in self.plugins:
             print plugin
             reactor.callInThread(self.get_data, plugin)
-
-        print 'foooo'
 
 
 class SniffFactory(Factory):
@@ -133,7 +82,6 @@ class SniffFactory(Factory):
 log.startLogging(sys.stdout)
 
 f = SockJSMultiFactory()
-#f.addFactory(Factory.forProtocol(PortProtocol), "port")
 f.addFactory(Factory.forProtocol(SniffProtocol), 'sniff')
 
 reactor.listenTCP(8080, f)
