@@ -30,7 +30,9 @@ class TraceroutePlugin(IPlugin):
             'MainClass': 'TracerouteChart',
             'Code': content,
             'GridWidth': 2,
-            'GridHeight': 1
+            'GridHeight': 1,
+            'HelperText': 'This is the helper text for the Traceroute chart',
+            'Title': 'Traceroute of local connections.'
         }
 
 def parse_stream(stream):
