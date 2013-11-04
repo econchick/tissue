@@ -35,7 +35,9 @@ class PortsPlugin(IPlugin):
             'MainClass': 'OpenPortsChart',
             'Code': content,
             'GridWidth': 1,
-            'GridHeight': 1
+            'GridHeight': 1,
+            'HelperText': 'This is the helper text for the Port chart',
+            'Title': "Current locally open ports."
         }
 
 

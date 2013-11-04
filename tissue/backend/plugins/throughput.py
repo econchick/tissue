@@ -26,7 +26,9 @@ class ThroughputPlugin(IPlugin):
             'MainClass': 'ThroughputChart',
             'Code': content,
             'GridWidth': 1,
-            'GridHeight': 1
+            'GridHeight': 1,
+            'HelperText': 'This is the helper text for the Throughput chart',
+            'Title': 'Data throughput by destination address.'
         }
 
 

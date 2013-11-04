@@ -41,5 +41,5 @@ class SniffProtocol(Protocol):
 f = SockJSMultiFactory()
 f.addFactory(Factory.forProtocol(SniffProtocol), 'sniff')
 
-reactor.listenTCP(8801, f)
+reactor.listenTCP(8800, f)
 reactor.run()
