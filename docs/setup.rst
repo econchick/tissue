@@ -3,8 +3,46 @@
 Setup
 =====
 
-* pip install -r requirements.txt
-* scapy is found here: pip install hg+http://hg.secdev.org/scapy
-* pcapy: pip install "http://corelabs.coresecurity.com/index.php?module=Wiki&action=attachment&type=tool&page=Pcapy&file=pcapy-0.10.8.tar.gz"
-* pylibpcap: pip install http://sourceforge.net/projects/pylibpcap/files/pylibpcap/0.6.4/pylibpcap-0.6.4.tar.gz/download
-* dnet: pip install http://prdownloads.sourceforge.net/libdnet/libdnet-1.11.tar.gz?download
+.. _step-1-binaries:
+
+Step 1: Binaries
+----------------
+
+* install `libpcap <http://www.tcpdump.org/>`_
+    * For Linux: `sudo apt-get install libpcap0.8-dev`
+    * For Mac OSX: Should already have tcpdump (that includes libpcap)
+* download/install `libdnet <http://libdnet.sourceforge.net/>`_:
+
+
+Libdnet + python wrapper:
+
+::
+
+    $ wget http://libdnet.googlecode.com/files/libdnet-1.12.tgz
+    $ tar xfz libdnet-1.12.tgz
+    $ ./configure
+    $ make
+    $ sudo make install
+    $ cd python
+    $ python2.5 setup.py install
+
+Step 2: Python packages
+-----------------------
+
+``pip install -r requirements.txt``
+
+
+Error Messages
+--------------
+
+Got error messages when installing?
+
+1. Install libpcap-dev (from :ref:`step-1-binaries`) if you see this message:
+
+::
+
+    pcapdumper.cc:12:18: fatal error: pcap.h: No such file or directory
+
+    #include <pcap.h>
+
+
