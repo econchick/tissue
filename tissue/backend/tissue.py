@@ -9,6 +9,9 @@ from txsockjs.factory import SockJSMultiFactory
 
 from yapsy.PluginManager import PluginManager
 
+log.startLogging(sys.stdout)
+logging.basicConfig(level=logging.DEBUG)
+
 
 class SniffProtocol(Protocol):
     DEFAULT_PLUGIN_PATHS = ['plugins']
