@@ -2,6 +2,8 @@ import logging
 import os
 import sys
 
+import click
+
 from twisted.internet import reactor, threads
 from twisted.internet.protocol import Factory, Protocol
 from twisted.internet.task import LoopingCall
@@ -42,22 +44,24 @@ class SniffProtocol(Protocol):
             d = threads.deferToThread(plugin.plugin_object.update)
             d.addCallback(self._blocking_write)
 
-euid = os.geteuid()
-if euid != 0:
-    print "Error: tissue server must be run as root"
-    sys.exit(1)
+@click.command()
+@click.option(
+    '--port', '-p', default=8080, type=click.IntRange(0, 65535),
+    help='tissue server port')
+def start_server(port):
+    euid = os.geteuid()
+    if euid != 0:
+        print "Error: tissue server must be run as root"
+        sys.exit(1)
 
-server_port = os.getenv('TISSUE_SERVER_PORT', 8080)
+    f = SockJSMultiFactory()
+    f.addFactory(Factory.forProtocol(SniffProtocol), 'sniff')
 
-if not server_port.isdigit():
-    print "Error: Invalid server port given: %s" % server_port
-    sys.exit(1)
+    try:
+        reactor.listenTCP(port, f)
+        reactor.run()
+    except OverflowError:
+        print "Error: Port must be in range 0-65535"
 
-f = SockJSMultiFactory()
-f.addFactory(Factory.forProtocol(SniffProtocol), 'sniff')
-
-try:
-    reactor.listenTCP(int(server_port), f)
-    reactor.run()
-except OverflowError:
-    print "Error: Port must be in range 0-65535"
+if __name__ == '__main__':
+    start_server()
