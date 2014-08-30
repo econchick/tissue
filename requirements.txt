@@ -1,7 +1,7 @@
 Flask==0.10.1
 Jinja2==2.7.1
 MarkupSafe==0.18
-Pyrex==0.9.8.6
+http://corelabs.coresecurity.com/index.php?module=Wiki&action=attachment&type=tool&page=Pcapy&file=pcapy-0.10.8.tar.gz
 Twisted==13.1.0
 Werkzeug==0.9.4
 #dnet==1.12
@@ -10,8 +10,11 @@ itsdangerous==0.23
 psutil==1.1.0
 pyOpenSSL==0.13.1
 pygeoip==0.2.7
-pylibpcap==0.6.4
+http://www.secdev.org/projects/scapy/files/scapy-latest.tar.gz
 txsockjs==1.2.1
 wsgiref==0.1.2
 zope.interface==4.0.5
-
+Yapsy==1.10.423
+http://downloads.sourceforge.net/project/pylibpcap/pylibpcap/0.6.4/pylibpcap-0.6.4.tar.gz
+http://www.cosc.canterbury.ac.nz/greg.ewing/python/Pyrex/Pyrex-0.9.9.tar.gz
+https://dpkt.googlecode.com/files/dpkt-1.8.tar.gz
