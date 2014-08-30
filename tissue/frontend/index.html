@@ -13,13 +13,29 @@
             <a href="http://tissue.sh">tissue</a>
         </div>
     </div>
+    <div class="error_bar" style="display:None">
+        <p>foodd</p>
+    </div>
     <div class="mainContent" id="mainContent">
         <div class="cardContainer" id="mainContainer" style="display: table">
         </div>
     </div>
 
     <script>
-        var socket = new SockJS('http://127.0.0.1:8801/sniff');
+        var socket = new SockJS('https://tissue-backend-c9-sporst.c9.io:8080');
+        var connected = false;
+        
+        socket.onclose = function(e) {
+            var error_bar = document.querySelector('.error_bar p');
+
+            error_bar.parentNode.style.display = '';
+
+            if (connected) {
+                error_bar.textContent = 'Lost connection to server: ' + e
+            } else {
+                error_bar.textContent = 'Could not connect to server: ' + e;
+            }
+        }
 
         var plugins = [];
         var plugin_instances = [];
@@ -57,6 +73,7 @@
         }
 
         socket.onmessage = function(e) {
+            connected = true;
             if (e.data[0] === "REGISTER-PLUGIN") {
                 addPlugin(e.data[1]);
             }
