@@ -50,7 +50,7 @@ if euid != 0:
 server_port = os.getenv('TISSUE_SERVER_PORT', 8080)
 
 if not server_port.isdigit():
-    print "Specified invalid server port: %s" % server_port
+    print "Error: Invalid server port given: %s" % server_port
     sys.exit(1)
 
 f = SockJSMultiFactory()
