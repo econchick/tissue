@@ -42,6 +42,11 @@ class SniffProtocol(Protocol):
             d = threads.deferToThread(plugin.plugin_object.update)
             d.addCallback(self._blocking_write)
 
+euid = os.geteuid()
+if euid != 0:
+    print "Error: tissue server must be run as root"
+    sys.exit(1)
+
 server_port = os.getenv('TISSUE_SERVER_PORT', 8080)
 
 if not server_port.isdigit():
