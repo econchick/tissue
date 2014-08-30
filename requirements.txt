@@ -4,8 +4,6 @@ MarkupSafe==0.18
 http://corelabs.coresecurity.com/index.php?module=Wiki&action=attachment&type=tool&page=Pcapy&file=pcapy-0.10.8.tar.gz
 Twisted==13.1.0
 Werkzeug==0.9.4
-#dnet==1.12
-#dpkt==1.8
 itsdangerous==0.23
 psutil==1.1.0
 pyOpenSSL==0.13.1
