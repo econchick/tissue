@@ -469,14 +469,14 @@ div.code pre {
 
 .card_cell {
     display: table-cell;
-    width: 510px;
+    width: 1090px;
     height: 520px;
     background: center center black;
 }
 
 .card {
     display: block;
-    width: 500px;
+    width: 1070px;
     height: 500px;
     position:relative;
     left:10px;
@@ -500,4 +500,11 @@ div.code pre {
   padding: 10px;
   color: red;
   font-weight: bold;
+}
+
+.card_header {
+  text-align: center;
+  font-size: 20px;
+  background: orange;
+  color: #272727;
 }
