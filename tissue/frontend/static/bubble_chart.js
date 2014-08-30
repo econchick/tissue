@@ -9,7 +9,7 @@ function BubbleChart(svg, diameter) {
 
     this.bubble = d3.layout.pack()
         .sort(null)
-        .size([this.diameter, this.diameter])
+        .size([(this.diameter), (this.diameter/2)])
         .padding(1.5);
 
     this.updateNodes = function() {

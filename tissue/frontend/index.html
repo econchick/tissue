@@ -67,7 +67,7 @@
           var header = card.append("div").attr("class", "card_header").text(pluginInfo.Name);
           var content = card.append("div");
           addScript(pluginInfo.Code);
-          var plugin = "new " + pluginInfo.MainClass + "(content.append('svg'), 500, 500)";
+          var plugin = "new " + pluginInfo.MainClass + "(content.append('svg'), 1050, 450)";
           plugin = eval(plugin);
           plugin_instances.push(plugin);
         }
