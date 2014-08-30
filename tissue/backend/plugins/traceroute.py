@@ -15,10 +15,13 @@ class TraceroutePlugin(IPlugin):
         if self.working:
             return []
         self.working = True
-        traceroute, sport = trace_route(self.iface)
+        traceroute, sport, errors = trace_route(self.iface)
         coordinates = map_ip(traceroute)
         self.working = False
-        return [('TRACE', sport, coordinates)]
+        result = [('TRACE', sport, coordinates)]
+        if errors:
+            result.append(('ERROR', errors))
+        return result
 
     def getInformation(self, iface):
         self.iface = iface
@@ -56,17 +59,19 @@ def trace_route(iface):
         dport = proto_layer.dport
         sport = proto_layer.sport
 
-        while True:
-            try:
-                res, unans = traceroute(target=destination, dport=dport, sport=sport, maxttl=20)
-                traces = res.res
-                hops = [src]
-                for trace in traces:
-                    hops.append(trace[1].src)
+        errors = []
 
-                return hops, sport
-            except s.error:
-                continue
+        try:
+            res, unans = traceroute(target=destination, dport=dport, sport=sport, maxttl=20)
+            traces = res.res
+            hops = [src]
+            for trace in traces:
+                hops.append(trace[1].src)
+
+            return hops, sport, errors
+        except s.error, e:
+            errors.append('Traceroute Error: Coult not traceroute IP %s (%s)' % (destination, str(e)))
+            return [], 0, errors
 
 
 def map_ip(hops):
