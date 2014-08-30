@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 
 from twisted.internet import reactor, threads
@@ -41,8 +42,17 @@ class SniffProtocol(Protocol):
             d = threads.deferToThread(plugin.plugin_object.update)
             d.addCallback(self._blocking_write)
 
+server_port = os.getenv('TISSUE_SERVER_PORT', 8080)
+
+if not server_port.isdigit():
+    print "Specified invalid server port: %s" % server_port
+    sys.exit(1)
+
 f = SockJSMultiFactory()
 f.addFactory(Factory.forProtocol(SniffProtocol), 'sniff')
 
-reactor.listenTCP(8801, f)
-reactor.run()
+try:
+    reactor.listenTCP(int(server_port), f)
+    reactor.run()
+except OverflowError:
+    print "Error: Port must be in range 0-65535"
