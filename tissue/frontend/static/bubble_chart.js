@@ -99,6 +99,12 @@ function BubbleChart(svg, diameter) {
             .style("fill", "#272727")
             .text(function(d) { return d.title; });
 
+        node.append("text")
+            .attr("dy", "1.1em")
+            .style("text-anchor", "middle")
+            .style("fill", "#272727")
+            .text(newnode.id);
+
         this.updateNodes();
 
         return node;

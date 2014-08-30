@@ -69,7 +69,7 @@ def get_ports(connections, status):
         for connection in connections[key]:
             if connection.status == status:
                 _, port = connection.laddr
-                ports.append(port)
+                ports.append((key, port))
 
     return list(set(ports))
 

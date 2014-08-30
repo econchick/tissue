@@ -18,7 +18,6 @@ function OpenPortsChart(svg, width, height) {
     function resizeExistingBubbles(bubbleChart) {
         for (var i in bubbleChart.allbubbles.children){
             var child = bubbleChart.allbubbles.children[i];
-
             if (child.value < MAX_NODE_SIZE){
                 var node = bubbleChart.getNode(child.className);
                 bubbleChart.resizeNode(node, child.value + 1);
@@ -28,29 +27,30 @@ function OpenPortsChart(svg, width, height) {
     }
 
     function extractPorts(e) {
+        var connections = e.data[1];
         var ports = [];
-        for (var i in e.data[1]) {
-            ports.push(e.data[1][i]);
+        for (var i in connections) {
+            ports.push(connections[i]);
         }
         return ports;
     }
 
     function createNewBubbles(e, bubbleChart) {
         var extractedPorts = extractPorts(e);
-        for (var port in extractedPorts){
+        for (var connection in extractedPorts){
             bubbleChart.addNode({
-                "title": extractedPorts[port],
-                "name": "port" + port,
+                "title": extractedPorts[connection[0]][0],
+                "name": "port" + connection[1],
                 "size": 1,
-                "id": extractedPorts[port]
+                "id": extractedPorts[connection][1]
             }, null);
         }
     }
 
     function removeBubble(e) {
         var extractedPorts = extractPorts(e)
-        for (var port in extractedPorts) {
-            var node = bubbleChart.getNode(extractedPorts[port]);
+        for (var i in extractedPorts) {
+            var node = bubbleChart.getNode(extractedPorts[i][1]);
             bubbleChart.removeNode(node);
         }
     }
