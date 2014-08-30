@@ -64,7 +64,7 @@
           counter++;
           var cell = row.append("div").attr("class", "card_cell");
           var card = cell.append("div").attr("class", "card with-3d-shadow with-transitions");
-          var header = card.append("div").attr("class", "card_header");
+          var header = card.append("div").attr("class", "card_header").text(pluginInfo.Name);
           var content = card.append("div");
           addScript(pluginInfo.Code);
           var plugin = "new " + pluginInfo.MainClass + "(content.append('svg'), 500, 500)";

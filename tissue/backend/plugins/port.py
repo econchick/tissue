@@ -33,6 +33,7 @@ class PortsPlugin(IPlugin):
             content = content_file.read()
         return {
             'MainClass': 'OpenPortsChart',
+            'Name': "Programs with currently opened ports",
             'Code': content,
             'GridWidth': 1,
             'GridHeight': 1
