@@ -28,7 +28,7 @@ class PortsPlugin(IPlugin):
             return_values.append(('CLOSED', closed_ports))
         return return_values
 
-    def getInformation(self):
+    def getInformation(self, iface):
         with open('plugins/port.js', 'r') as content_file:
             content = content_file.read()
         return {

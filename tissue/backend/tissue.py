@@ -34,7 +34,7 @@ class SniffProtocol(Protocol):
         for plugin in self.manager.getAllPlugins():
           self._blocking_write(
               [(SniffProtocol.PLUGIN_REGISTRATION_MESSAGE,
-               plugin.plugin_object.getInformation())])
+               plugin.plugin_object.getInformation(SniffProtocol._iface))])
 
         main_loop = LoopingCall(self.updated_data)
         main_loop.start(SniffProtocol.REFRESH_PERIOD, now=False)
@@ -44,15 +44,20 @@ class SniffProtocol(Protocol):
             d = threads.deferToThread(plugin.plugin_object.update)
             d.addCallback(self._blocking_write)
 
+
 @click.command()
 @click.option(
     '--port', '-p', default=8080, type=click.IntRange(0, 65535),
     help='tissue server port')
-def start_server(port):
+@click.option(
+    '--iface', default=None, help='Network interface to listen on')
+def start_server(port, iface):
     euid = os.geteuid()
     if euid != 0:
         print "Error: tissue server must be run as root"
         sys.exit(1)
+
+    SniffProtocol._iface = iface
 
     f = SockJSMultiFactory()
     f.addFactory(Factory.forProtocol(SniffProtocol), 'sniff')

@@ -15,12 +15,14 @@ class TraceroutePlugin(IPlugin):
         if self.working:
             return []
         self.working = True
-        traceroute, sport = trace_route()
+        traceroute, sport = trace_route(self.iface)
         coordinates = map_ip(traceroute)
         self.working = False
         return [('TRACE', sport, coordinates)]
 
-    def getInformation(self):
+    def getInformation(self, iface):
+        self.iface = iface
+
         with open('plugins/traceroute.js', 'r') as content_file:
             content = content_file.read()
         return {
@@ -41,12 +43,13 @@ def get_local_ip():
     return sock.gethostbyname(socket.gethostname())
 
 
-def get_streams():
-    return sniff(iface="en0", filter='tcp and src %s' % get_local_ip(), count=10)
+def get_streams(iface):
+    return sniff(
+        iface='eth0', filter='tcp and src %s' % get_local_ip(), count=10)
 
 
-def trace_route():
-    for stream in get_streams():
+def trace_route(iface):
+    for stream in get_streams(iface):
         ether_layer, IP_layer, proto_layer = parse_stream(stream)
         destination = IP_layer.dst
         src = IP_layer.src

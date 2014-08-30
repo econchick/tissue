@@ -10,7 +10,7 @@ class ThroughputPlugin(IPlugin):
         self.stats = defaultdict(int)
 
     def update(self):
-        packets = get_streams()
+        packets = get_streams(self.iface)
         throughput_data = defaultdict(int)
         for packet in packets:
             IP_layer = packet.getlayer('IP')
@@ -19,7 +19,9 @@ class ThroughputPlugin(IPlugin):
         results = [('THROUGHPUT-DATA', throughput_data.items())]
         return results
 
-    def getInformation(self):
+    def getInformation(self, iface):
+        self.iface = iface
+
         with open('plugins/throughput.js', 'r') as content_file:
             content = content_file.read()
         return {
@@ -34,5 +36,5 @@ def get_local_ip():
     return sock.gethostbyname(socket.gethostname())
 
 
-def get_streams():
-    return sniff(iface="en0", filter='tcp and src %s' % get_local_ip(), count=10)
+def get_streams(iface):
+    return sniff(iface='eth0', filter='tcp and src %s' % get_local_ip(), count=10)
