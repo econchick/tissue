@@ -46,3 +46,12 @@ Got error messages when installing?
     #include <pcap.h>
 
 
+Running
+=======
+
+::
+
+$ python tissue.py
+
+
+* Mac OS X? need at least python 2.7.6
