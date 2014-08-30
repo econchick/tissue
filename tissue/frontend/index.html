@@ -22,18 +22,21 @@
     </div>
 
     <script>
-        var socket = new SockJS('https://tissue-backend-c9-sporst.c9.io:8080');
-        var connected = false;
-        
-        socket.onclose = function(e) {
+        var showError = function(error) {
             var error_bar = document.querySelector('.error_bar p');
 
             error_bar.parentNode.style.display = '';
+            error_bar.textContent = error;
+        }
 
+        var socket = new SockJS('https://tissue-backend-c9-sporst.c9.io/sniff');
+        var connected = false;
+
+        socket.onclose = function(e) {
             if (connected) {
-                error_bar.textContent = 'Lost connection to server: ' + e
+                showError('Lost connection to server: ' + e);
             } else {
-                error_bar.textContent = 'Could not connect to server: ' + e;
+                showError('Could not connect to server: ' + e);
             }
         }
 
@@ -76,6 +79,8 @@
             connected = true;
             if (e.data[0] === "REGISTER-PLUGIN") {
                 addPlugin(e.data[1]);
+            } else if (e.data[0] === "ERROR") {
+                showError(e.data[1]);
             }
 
             for (var i in plugin_instances) {
