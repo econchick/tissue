@@ -14,7 +14,7 @@ May I pass you a tissue?
 
 `tissue <https://github.com/econchick/tissue>`_ is a locally hosted web application that's meant to be a prettier `wireshark <http://http://www.wireshark.org/>`_.
 
-User's Guide
+Users Guide
 ------------
 
 .. toctree::
@@ -23,6 +23,18 @@ User's Guide
    installation
    getting-started
 
+Developers Guide
+-----------------
+
+.. include:: technical-info.rst
+   :start-after: :orphan:
+
+.. toctree::
+   :maxdepth: 2
+   
+   setup
+   API documentation
+   contributions
 
 
 Indices and tables
