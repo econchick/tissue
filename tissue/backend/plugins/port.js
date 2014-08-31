@@ -35,6 +35,7 @@ function OpenPortsChart(svg, width, height) {
     };
 
     this._port_information = {};
+    this._port_rows = {};
 
     this._addRow  = function(table, program_name) {
         var row = table.insertRow();
@@ -59,6 +60,24 @@ function OpenPortsChart(svg, width, height) {
         var portsRow = new PortsRow(d3.select(_getPortsCell(row)));
 
         this._port_information[program] = portsRow;
+        this._port_rows[program] = table.rows.length - 1;
+    };
+
+    this._removeRow = function(program) {
+        var table = document.querySelector(".ports-table");
+        var index = this._port_rows[program];
+
+        // Decrement the indices of all rows after the deleted row.
+        for (var p in this._port_rows) {
+            if (this._port_rows[p] > index) {
+                this._port_rows[p] = this._port_rows[p] - 1;
+            }
+        }
+
+        table.deleteRow(index);
+
+        delete this._port_information[program];
+        delete this._port_rows[program];
     };
 
     /**
@@ -90,14 +109,42 @@ function OpenPortsChart(svg, width, height) {
         }
     };
 
+    this._removePorts = function(processes) {
+        for (var process in processes) {
+            var program = process;
+
+            if (program in this._port_information === false) {
+                // It's possible that the program was closed in the meantime.
+                return;
+            }
+
+            var portsRow = this._port_information[program];
+
+            if (portsRow === null) {
+                // It's possible that the port was closed in the meantime.
+                return;
+            }
+
+            var removed_ports = processes[process].ports;
+
+            for (var j=0; j<removed_ports.length; j++) {
+                portsRow.removePort(removed_ports[j]);
+            }
+
+            if (!portsRow.hasPorts()) {
+                this._removeRow(program);
+            }
+        }
+    };
+
     this.receivedData = function(e) {
-            console.log(e);
         if (isEstablishedMessage(e)) {
             this._message_log.log('Message received: New ports established');
             this._addPorts(e.data[1]);
         }
         else if (isClosedMessage(e)) {
             this._message_log.log('Message received: Existing ports closed');
+            this._removePorts(e.data[1]);
         }
     };
 }
