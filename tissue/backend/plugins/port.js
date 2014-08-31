@@ -47,8 +47,10 @@ function OpenPortsChart(svg, width, height) {
     this._addRow  = function(table, program_name) {
         var row = table.insertRow();
         var cell1 = row.insertCell();
+        var escaped_program_name = program_name.replace(/\./g, "-").replace(/\ /g, "-");
+        this._set_modal(escaped_program_name);
         cell1.className = "port-cell-program";
-        cell1.innerHTML = '<a href="#myModal" data-backdrop="false" data-toggle="modal">' + program_name + '</a>';
+        cell1.innerHTML = '<a href="#modal-'+ escaped_program_name +'" data-backdrop="false" data-toggle="modal">' + program_name + '</a>';
         row.insertCell();
         return row;
     };
@@ -108,6 +110,10 @@ function OpenPortsChart(svg, width, height) {
             for (var j=0; j<established_ports.length; j++) {
                 portsRow.addPort(established_ports[j]);
             }
+
+            var process_information = processes[process].info;
+            this._set_modal_html(program, process_information);
+
         }
     };
 
@@ -138,6 +144,80 @@ function OpenPortsChart(svg, width, height) {
                 this._removeRow(program);
             }
         }
+
+    this._set_modal = function(modal_name) {
+        $("#modal-" + modal_name).draggable({
+            handle: ".modal-header"
+        });
+    };
+
+    this._set_modal_html = function(program_name, program_info) {
+        var escaped_program_name = program_name.replace(/\./g, "-").replace(/\ /g, "-");
+        var modal_div = $("#tissue-modal");
+        modal_div.append('<!-- Modal --> \
+            <div id=modal-' + escaped_program_name + ' class="modal fade"> \
+              <div class="modal-dialog"> \
+                <div class="modal-content"> \
+                  <div class="modal-header"> \
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> \
+                    <h4 class="modal-title">Process Information</h4> \
+                  </div> \
+                  <div class="modal-body"> \
+                  <div class="table-responsive"> \
+                    <table class="table table-striped"> \
+                      <thead> \
+                        <tr><td colspan="2">' + program_name + '</td></tr> \
+                      </thead> \
+                      <tbody> \
+                        <tr> \
+                          <td>Program Name</td> \
+                          <td>' + program_name + '</td> \
+                        </tr> \
+                        <tr> \
+                          <td>Path</td> \
+                          <td>' + program_info.path + '</td> \
+                        </tr> \
+                        <tr> \
+                          <td>Username</td> \
+                          <td>' + program_info.username + '</td> \
+                        </tr> \
+                        <tr> \
+                          <td>Process ID</td> \
+                          <td>' + program_info.pid + '</td> \
+                        </tr> \
+                        <tr> \
+                          <td>Has Children</td> \
+                          <td>' + program_info.has_children + '</td> \
+                        </tr> \
+                        <tr> \
+                          <td>Create Time</td> \
+                          <td>' + program_info.create_time + '</td> \
+                        </tr> \
+                        <tr> \
+                          <td>Memory %</td> \
+                          <td>' + program_info.memory_percent + '</td> \
+                        </tr> \
+                        <tr> \
+                          <td>CPU %</td> \
+                          <td>' + program_info.CPU_percent + '</td> \
+                        </tr> \
+                        <tr> \
+                          <td># of Threads</td> \
+                          <td>' + program_info.threads + '</td> \
+                        </tr> \
+                      </tbody> \
+                    </table> \
+                  </div> \
+                  <div class="modal-footer"> \
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> \
+                  </div> \
+                </div> \
+                <!-- /.modal-content --> \
+              </div> \
+              <!-- /.modal-dialog --> \
+            </div> \
+            <!-- /.modal -->');
+        return modal_div;
     };
 
     /** Invoked by the plugin handler when a new message arrives. */
@@ -152,3 +232,7 @@ function OpenPortsChart(svg, width, height) {
         }
     };
 }
+
+// $("#myModal").draggable({
+//   handle: ".modal-header"
+// });

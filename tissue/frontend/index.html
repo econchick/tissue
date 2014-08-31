@@ -75,49 +75,8 @@
         <textarea class="message_pre"/></textarea>
       </div>
     </div>
-    <!-- Modal -->
-    <div id="myModal" class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Process Information</h4>
-          </div>
-          <div class="modal-body">
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr><td colspan="2">Dropbox</td></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Program Name</td>
-                  <td>Dropbox</td>
-                </tr>
-                <tr>
-                  <td>Path</td>
-                  <td>/Path/to/executable</td>
-                </tr>
-                <tr>
-                  <td>Username</td>
-                  <td>lynnroot</td>
-                </tr>
-                <tr>
-                  <td>Process ID</td>
-                  <td>123</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
+    <div id="tissue-modal"></div>
+
     <script>
 
     window.onload = function () {
@@ -245,11 +204,6 @@
     <script src="static/js/jquery.min.js"></script>
     <script src="static/js/jquery-ui.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
-    <script>
-      $("#myModal").draggable({
-          handle: ".modal-header"
-      });
-    </script>
 
 </body>
 </html>
