@@ -39,7 +39,8 @@ class PortsPlugin(IPlugin):
 
         return_values = []
 
-        return_values.append(("ESTABLISHED", grouped_new))
+        if grouped_new:
+            return_values.append(("ESTABLISHED", grouped_new))
         if grouped_closed:
             return_values.append(("CLOSED", grouped_closed))
         return return_values
