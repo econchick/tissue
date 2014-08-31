@@ -1,5 +1,7 @@
-import psutil
+import itertools
+import operator
 
+import psutil
 from yapsy.IPlugin import IPlugin
 
 
@@ -22,10 +24,24 @@ class PortsPlugin(IPlugin):
     def update(self):
         scanned_ports = ports("ESTABLISHED")
         new_ports, closed_ports = self.port_status.update(scanned_ports)
+
+        new_ports = sorted(new_ports)
+        group_new = itertools.groupby(new_ports, operator.itemgetter(0))
+        grouped_new = []
+        for k, v in group_new:
+            grouped_new.append((k, list(item[1] for item in v)))
+
+        closed_ports = sorted(closed_ports)
+        group_closed = itertools.groupby(closed_ports, operator.itemgetter(0))
+        grouped_closed = []
+        for k, v in group_closed:
+            grouped_closed.append((k, list(item[1] for item in v)))
+
         return_values = []
-        return_values.append(("ESTABLISHED", new_ports))
-        if closed_ports:
-            return_values.append(('CLOSED', closed_ports))
+
+        return_values.append(("ESTABLISHED", grouped_new))
+        if grouped_closed:
+            return_values.append(("CLOSED", grouped_closed))
         return return_values
 
     def getInformation(self, iface):
