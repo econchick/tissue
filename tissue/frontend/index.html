@@ -67,16 +67,69 @@
       </div>
     </div>
     </div>
-<div class="message_div">
-  <form action="">
-    <input type="checkbox" class="log_scroll_checkbox" name="scrolling" onchange="toggleScrolling();" checked>Auto-scroll logs<br>
-  </form>
-  <div class="message_pre_div">
-    <textarea class="message_pre"/></textarea>
-  </div>
-</div>
-
+    <div class="message_div">
+      <form action="">
+        <input type="checkbox" class="log_scroll_checkbox" name="scrolling" onchange="toggleScrolling();" checked>Auto-scroll logs<br>
+      </form>
+      <div class="message_pre_div">
+        <textarea class="message_pre"/></textarea>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div id="myModal" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Process Information</h4>
+          </div>
+          <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr><td colspan="2">Dropbox</td></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Program Name</td>
+                  <td>Dropbox</td>
+                </tr>
+                <tr>
+                  <td>Path</td>
+                  <td>/Path/to/executable</td>
+                </tr>
+                <tr>
+                  <td>Username</td>
+                  <td>lynnroot</td>
+                </tr>
+                <tr>
+                  <td>Process ID</td>
+                  <td>123</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
     <script>
+
+    window.onload = function () {
+        var portsRow = new PortsRow(d3.select("#ports-dropbox"));
+        console.log(d3.select("#ports-dropbox"));
+        console.log(portsRow);
+        portsRow.addPort(65535);
+        setTimeout(function() {portsRow.addPort(30)}, 2000);
+        setTimeout(function() {portsRow.addPort(5)}, 4000);
+        setTimeout(function() {portsRow.removePort(5)}, 6000);
+        };
+
         function MessageLog(message_log_div) {
             this._message_log_div = message_log_div;
             this._logged_messages = [];
@@ -190,6 +243,13 @@
     </script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
+    <script>
+      $("#myModal").draggable({
+          handle: ".modal-header"
+      });
+    </script>
+
 </body>
 </html>
