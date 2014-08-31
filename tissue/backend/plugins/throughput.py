@@ -5,7 +5,7 @@ from scapy.all import *
 from yapsy.IPlugin import IPlugin
 
 
-class ThroughputPlugin(IPlugin):
+class ThroughputPlugin():
     def __init__(self):
         self.stats = defaultdict(int)
 

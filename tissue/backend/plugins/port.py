@@ -56,11 +56,11 @@ class PortsPlugin(IPlugin):
 
         return_values = []
 
-        return_values.append(("ESTABLISHED", new_connections))
+        if new_connections:
+            return_values.append(("ESTABLISHED", new_connections))
         if disconnected_processes:
             return_values.append(("CLOSED", disconnected_processes))
 
-        print return_values
         return return_values
 
     def getInformation(self, iface):

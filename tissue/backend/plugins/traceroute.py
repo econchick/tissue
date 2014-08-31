@@ -7,7 +7,7 @@ import pygeoip
 from yapsy.IPlugin import IPlugin
 
 
-class TraceroutePlugin(IPlugin):
+class TraceroutePlugin():
     def __init__(self):
         self.working = False
 
