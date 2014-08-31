@@ -6,3 +6,12 @@
 .tissue-nav-break {
   padding-top: 50px;
 }
+
+.modal
+{
+    overflow: hidden;
+}
+.modal-dialog{
+    margin-right: 0;
+    margin-left: 0;
+}
