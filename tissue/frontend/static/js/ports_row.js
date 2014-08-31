@@ -10,6 +10,8 @@ function PortsRow(parent) {
     this.COLOR_NEW_PORT = "green";
     this.COLOR_CLOSED_PORT = "red";
 
+    this._parent = parent;
+
     this._svg = parent.append("svg")
         .attr('height', this.CIRCLE_DIAMETER + 'px')
         .attr('width', '100%');
@@ -110,4 +112,12 @@ function PortsRow(parent) {
                 });
         }
     };
+
+    this.hasPorts = function() {
+        return this._ports.length !== 0;
+    };
+
+    this.getParent = function() {
+        return this._parent;
+    }
 }
