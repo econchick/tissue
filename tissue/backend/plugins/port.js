@@ -144,6 +144,7 @@ function OpenPortsChart(svg, width, height) {
                 this._removeRow(program);
             }
         }
+    };
 
     this._set_modal = function(modal_name) {
         $("#modal-" + modal_name).draggable({
