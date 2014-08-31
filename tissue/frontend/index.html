@@ -59,26 +59,10 @@
               <li><a href="">Contact</a></li>
             </ul>
         </div>
-        <div class="col-sm-offset-3 col-md-offset-2">
+        <div>
           <h1>Tissue Dashboard</h1>
-
-          <h2>Currently running programs with open ports</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th width="150px" style="text-align:right">Program</th>
-                  <th>Open ports</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr height="30px">
-                  <td style="text-align:right;vertical-align:middle">Dropbox</td>
-                  <td><div id="ports-dropbox"></div></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        </div>
+        <div class="tissue-main col-sm-offset-3 col-md-offset-2">
         </div>
       </div>
     </div>
@@ -93,16 +77,6 @@
 </div>
 
     <script>
-    window.onload = function () {
-        var portsRow = new PortsRow(d3.select("#ports-dropbox"));
-        console.log(d3.select("#ports-dropbox"));
-        console.log(portsRow);
-portsRow.addPort(65535);
-setTimeout(function() {portsRow.addPort(30)}, 2000);
-setTimeout(function() {portsRow.addPort(5)}, 4000);
-setTimeout(function() {portsRow.removePort(5)}, 6000);
-};
-
         function MessageLog(message_log_div) {
             this._message_log_div = message_log_div;
             this._logged_messages = [];
@@ -124,12 +98,10 @@ setTimeout(function() {portsRow.removePort(5)}, 6000);
         };
 
         MessageLog.prototype.setScrollingEnabled = function(enabled) {
-          console.log("Setting scrolling to " + enabled);
             this._scrolling_enabled = enabled;
-        }
+        };
 
         var message_log = new MessageLog(document.querySelector('.message_pre'));
-setInterval(function() {message_log.log("Foo")}, 1000);
 
         function toggleScrolling() {
             var scrollBox = document.querySelector(".log_scroll_checkbox");
@@ -188,6 +160,7 @@ setInterval(function() {message_log.log("Foo")}, 1000);
           addScript(pluginInfo.Code);
           var plugin = "new " + pluginInfo.MainClass + "(content.append('svg'), 1050, 450)";
           plugin = eval(plugin);
+          plugin.initialize(message_log);
           plugin_instances.push(plugin);
         }
 
@@ -196,6 +169,8 @@ setInterval(function() {message_log.log("Foo")}, 1000);
                 connected = true;
                 message_log.log('Successfully connected to remote server');
             }
+
+            message_log.log("Received message: " + e);
 
             if (e.data[0] === "REGISTER-PLUGIN") {
                 message_log.log('Registered plugin: ' + e.data[1].Name);

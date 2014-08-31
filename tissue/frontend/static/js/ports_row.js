@@ -1,4 +1,8 @@
 function PortsRow(parent) {
+    if (parent === null) {
+        throw "Error: Parent of ports row object can not be null";
+    }
+    
     this.CIRCLE_RADIUS = 30;
     this.CIRCLE_DIAMETER = 2 * this.CIRCLE_RADIUS;
     this.CIRCLE_SPACING = this.CIRCLE_DIAMETER + 0;
