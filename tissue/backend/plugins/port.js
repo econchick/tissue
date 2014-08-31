@@ -40,40 +40,64 @@ function OpenPortsChart(svg, width, height) {
         var row = table.insertRow();
         var cell1 = row.insertCell();
         cell1.className = "port-cell-program";
-        cell1.innerHTML = program_name;
+        cell1.innerHTML = '<a href="#myModal" data-backdrop="false" data-toggle="modal">' + program_name + '</a>';
         row.insertCell();
         return row;
     };
 
-    this._updatePorts = function(processes) {
-        for (var process in processes) {
-            var program = process;
-            var established_ports = processes[process].ports;
-            if (program in this._port_information) {
-            } else {
-                var table = document.querySelector(".ports-table");
-                var row = this._addRow(table, program);
-                var portsRow = new PortsRow(d3.select(row.cells[1]));
-                for (var j=0; j<established_ports.length; j++) {
-                    portsRow.addPort(established_ports[j]);
-                }
-            }
-        }
+    function _getPortsCell(row) {
+        return row.cells[1];
     }
 
+    /**
+     * Creates a new HTML row and stores information about it.
+     */
+    this._createRow = function(program) {
+        var table = document.querySelector(".ports-table");
+        var row = this._addRow(table, program);
+
+        var portsRow = new PortsRow(d3.select(_getPortsCell(row)));
+
+        this._port_information[program] = portsRow;
+    };
+
+    /**
+     * Takes received process information and creates new port information
+     * and GUI objects to represent the ports.
+     */
+    this._addPorts = function(processes) {
+        for (var process in processes) {
+            var program = process;
+
+            // It's a new process we've not seen before. Let's create a new
+            // row in the table for it.
+            if (program in this._port_information === false) {
+                this._createRow(program);
+            }
+
+            var portsRow = this._port_information[program];
+
+            if (portsRow === null) {
+                // It's possible that the port was closed in the meantime.
+                return;
+            }
+
+            var established_ports = processes[process].ports;
+
+            for (var j=0; j<established_ports.length; j++) {
+                portsRow.addPort(established_ports[j]);
+            }
+        }
+    };
+
     this.receivedData = function(e) {
+            console.log(e);
         if (isEstablishedMessage(e)) {
-            this._updatePorts(e.data[1]);
-            this._message_log.log('fpp');
-            this._message_log.log(e.data[1][0]);
-//        console.log(d3.select("#ports-dropbox"));
-//        console.log(portsRow);
-//portsRow.addPort(65535);
-//setTimeout(function() {portsRow.addPort(30)}, 2000);
-//setTimeout(function() {portsRow.addPort(5)}, 4000);
-//setTimeout(function() {portsRow.removePort(5)}, 6000);
+            this._message_log.log('Message received: New ports established');
+            this._addPorts(e.data[1]);
         }
         else if (isClosedMessage(e)) {
+            this._message_log.log('Message received: Existing ports closed');
         }
     };
 }
