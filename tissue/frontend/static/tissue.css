@@ -508,3 +508,14 @@ div.code pre {
   background: orange;
   color: #272727;
 }
+
+.log_console {
+  position:absolute;
+  bottom:0;
+  height:75px;
+  overflow-y: auto;
+  width:100%;
+  font-size: 15px;
+  background: white;
+  color: black;
+}

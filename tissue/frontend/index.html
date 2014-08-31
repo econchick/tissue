@@ -14,20 +14,42 @@
         </div>
     </div>
     <div class="error_bar" style="display:None">
-        <p>foodd</p>
+        <p></p>
     </div>
     <div class="mainContent" id="mainContent">
         <div class="cardContainer" id="mainContainer" style="display: table">
         </div>
     </div>
+    <div class="message_log">
+        <pre></pre>
+    </div>
 
     <script>
+        function MessageLog(message_log_div) {
+            this._message_log_div = message_log_div;
+            this._logged_messages = [];
+            this._max_messages = 10;
+        }
+
+        MessageLog.prototype.log = function(message) {
+            if (this._logged_messages.length == this._max_messages) {
+                this._logged_messages.shift();
+            }
+
+            this._logged_messages.push(message);
+            this._message_log_div.textContent = this._logged_messages.join('\n');
+        }
+
+        var message_log = new MessageLog(document.querySelector('.message_log pre'));
+
         var showError = function(error) {
             var error_bar = document.querySelector('.error_bar p');
 
             error_bar.parentNode.style.display = '';
             error_bar.textContent = error;
         }
+
+        message_log.log('Trying to connect to remote server');
 
         var socket = new SockJS('https://tissue-backend-c9-sporst.c9.io/sniff');
         var connected = false;
@@ -76,10 +98,16 @@
         }
 
         socket.onmessage = function(e) {
-            connected = true;
+            if (!connected) {
+                connected = true;
+                message_log.log('Successfully connected to remote server');
+            }
+
             if (e.data[0] === "REGISTER-PLUGIN") {
+                message_log.log('Registered plugin: ' + e.data[1].Name);
                 addPlugin(e.data[1]);
             } else if (e.data[0] === "ERROR") {
+                message_log.log('Error: ' + e.data[1]);
                 showError(e.data[1]);
             }
 
