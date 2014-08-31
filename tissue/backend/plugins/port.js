@@ -1,18 +1,27 @@
 function OpenPortsChart(svg, width, height) {
-    svg.attr("width", width)
-        .attr("height", height)
-        .attr("class", "bubble");
 
-    var bubbleChart = new BubbleChart(svg, width);
-
+    /** Determines whether a given message signals new established ports. */
     function isEstablishedMessage(e) {
-        return e.data != null && e.data.indexOf('ESTABLISHED') !== -1;
+        return e.data !== null && e.data.indexOf('ESTABLISHED') !== -1;
     }
 
+    /** Determines whether a given message signals new closed ports. */
     function isClosedMessage(e) {
-        return e.data != null && e.data.indexOf('CLOSED') !== -1;
+        return e.data !== null && e.data.indexOf('CLOSED') !== -1;
     }
 
+    /** Given a row, returns the cell that contains the ports information. */
+    function _getPortsCell(row) {
+        return row.cells[1];
+    }
+
+    /** Maps from program names to PortsRow port information objects. */
+    this._port_information = {};
+
+    /** Maps from program names to table rows. */
+    this._port_rows = {};
+
+    /** Called when the plugin is first initialized. **/
     this.initialize = function(message_log) {
         this._message_log = message_log;
         var main_div = document.querySelector(".tissue-main");
@@ -34,9 +43,7 @@ function OpenPortsChart(svg, width, height) {
           </div>';
     };
 
-    this._port_information = {};
-    this._port_rows = {};
-
+    /** Inserts a row at the end of a given table. */
     this._addRow  = function(table, program_name) {
         var row = table.insertRow();
         var cell1 = row.insertCell();
@@ -46,13 +53,7 @@ function OpenPortsChart(svg, width, height) {
         return row;
     };
 
-    function _getPortsCell(row) {
-        return row.cells[1];
-    }
-
-    /**
-     * Creates a new HTML row and stores information about it.
-     */
+    /** Creates a new HTML row and stores information about it. */
     this._createRow = function(program) {
         var table = document.querySelector(".ports-table");
         var row = this._addRow(table, program);
@@ -63,6 +64,7 @@ function OpenPortsChart(svg, width, height) {
         this._port_rows[program] = table.rows.length - 1;
     };
 
+    /** Removes the row of the given program from the UI. */
     this._removeRow = function(program) {
         var table = document.querySelector(".ports-table");
         var index = this._port_rows[program];
@@ -109,6 +111,7 @@ function OpenPortsChart(svg, width, height) {
         }
     };
 
+    /** Removes the given ports from the UI. */
     this._removePorts = function(processes) {
         for (var process in processes) {
             var program = process;
@@ -137,6 +140,7 @@ function OpenPortsChart(svg, width, height) {
         }
     };
 
+    /** Invoked by the plugin handler when a new message arrives. */
     this.receivedData = function(e) {
         if (isEstablishedMessage(e)) {
             this._message_log.log('Message received: New ports established');
