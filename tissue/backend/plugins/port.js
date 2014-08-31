@@ -45,19 +45,16 @@ function OpenPortsChart(svg, width, height) {
         return row;
     };
 
-    this._updatePorts = function(ports) {
-        for (var i=0; i<ports.length; i++) {
-            var port_info = ports[i];
-            var program = port_info[0];
-            var established_ports = port_info[1];
+    this._updatePorts = function(processes) {
+        for (var process in processes) {
+            var program = process;
+            var established_ports = processes[process].ports;
             if (program in this._port_information) {
             } else {
                 var table = document.querySelector(".ports-table");
                 var row = this._addRow(table, program);
-                console.log(d3.select(row.cells[1]).select('div'));
                 var portsRow = new PortsRow(d3.select(row.cells[1]));
                 for (var j=0; j<established_ports.length; j++) {
-                    console.log("Adding port " + established_ports[j]);
                     portsRow.addPort(established_ports[j]);
                 }
             }
