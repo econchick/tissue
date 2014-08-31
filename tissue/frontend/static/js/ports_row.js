@@ -33,7 +33,7 @@ function PortsRow(parent) {
     };
 
     this._createVisualGroup = function(port) {
-        var new_x = (this._ports.length + 1) * this.CIRCLE_SPACING;
+        var new_x = (this._ports.length + 2) * this.CIRCLE_SPACING;
         var new_y = this.CIRCLE_RADIUS;
 
         var g = this._svg.append("g")
