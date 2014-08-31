@@ -1,7 +1,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="static/css/bootstrap.min.css" type="text/css">
-    <!-- <link rel="stylesheet" href="static/css/tissue.css" type="text/css"> -->
+    <link rel="stylesheet" href="static/css/tissue.css" type="text/css">
     <link rel="stylesheet" href="static/css/custom.css" type="text/css">
     <script src="static/js/sockjs-0.3.js"></script>
     <script src="static/js/d3.min.js"></script>
@@ -83,6 +83,9 @@
       </div>
     </div>
     </div>
+<div class="message_log">
+  <pre style="background-color:#CCCCB2"></pre>
+</div>
 
     <script>
     window.onload = function () {
@@ -98,7 +101,7 @@ setTimeout(function() {portsRow.removePort(5)}, 6000);
         function MessageLog(message_log_div) {
             this._message_log_div = message_log_div;
             this._logged_messages = [];
-            this._max_messages = 10;
+            this._max_messages = 100;
         }
 
         MessageLog.prototype.log = function(message) {
@@ -108,6 +111,7 @@ setTimeout(function() {portsRow.removePort(5)}, 6000);
 
             this._logged_messages.push(message);
             this._message_log_div.textContent = this._logged_messages.join('\n');
+            this._message_log_div.parentNode.scrollTop = this._message_log_div.parentNode.scrollHeight;
         }
 
         var message_log = new MessageLog(document.querySelector('.message_log pre'));
@@ -121,7 +125,7 @@ setTimeout(function() {portsRow.removePort(5)}, 6000);
 
         message_log.log('Trying to connect to remote server');
 
-        var socket = new SockJS('http://127.0.0.1:8080/sniff');
+        var socket = new SockJS('https://tissue-backend-c9-sporst.c9.io/sniff');
         var connected = false;
 
         socket.onclose = function(e) {
