@@ -55,12 +55,22 @@
   color: #272727;
 }
 
-.message_log {
+.message_div {
   position:absolute;
   bottom:0;
-  height:75px;
-  overflow-y: auto;
+  height:150px;
   width:100%;
+}
+
+.message_pre_div {
   font-size: 15px;
   color: black;
+  overflow-y: auto;
+  height:110px;
+}
+
+.message_pre {
+  background-color:#CCCCB2;
+  width:100%;
+  height:100%;
 }

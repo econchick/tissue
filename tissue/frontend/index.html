@@ -83,8 +83,13 @@
       </div>
     </div>
     </div>
-<div class="message_log">
-  <pre style="background-color:#CCCCB2"></pre>
+<div class="message_div">
+  <form action="">
+    <input type="checkbox" class="log_scroll_checkbox" name="scrolling" onchange="toggleScrolling();" checked>Auto-scroll logs<br>
+  </form>
+  <div class="message_pre_div">
+    <textarea class="message_pre"/></textarea>
+  </div>
 </div>
 
     <script>
@@ -102,6 +107,7 @@ setTimeout(function() {portsRow.removePort(5)}, 6000);
             this._message_log_div = message_log_div;
             this._logged_messages = [];
             this._max_messages = 100;
+            this._scrolling_enabled = true;
         }
 
         MessageLog.prototype.log = function(message) {
@@ -110,18 +116,32 @@ setTimeout(function() {portsRow.removePort(5)}, 6000);
             }
 
             this._logged_messages.push(message);
-            this._message_log_div.textContent = this._logged_messages.join('\n');
-            this._message_log_div.parentNode.scrollTop = this._message_log_div.parentNode.scrollHeight;
+            this._message_log_div.value = this._logged_messages.join('\n');
+
+            if (this._scrolling_enabled) {
+              this._message_log_div.scrollTop = this._message_log_div.scrollHeight;
+            }
+        };
+
+        MessageLog.prototype.setScrollingEnabled = function(enabled) {
+          console.log("Setting scrolling to " + enabled);
+            this._scrolling_enabled = enabled;
         }
 
-        var message_log = new MessageLog(document.querySelector('.message_log pre'));
+        var message_log = new MessageLog(document.querySelector('.message_pre'));
+setInterval(function() {message_log.log("Foo")}, 1000);
+
+        function toggleScrolling() {
+            var scrollBox = document.querySelector(".log_scroll_checkbox");
+            message_log.setScrollingEnabled(scrollBox.checked);
+        }
 
         var showError = function(error) {
             var error_bar = document.querySelector('.alert-danger p');
 
             error_bar.parentNode.style.display = '';
             error_bar.textContent = error;
-        }
+        };
 
         message_log.log('Trying to connect to remote server');
 
