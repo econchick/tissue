@@ -1,10 +1,16 @@
 function PortsRow(parent) {
+    if (parent === null) {
+        throw "Error: Parent of ports row object can not be null";
+    }
+    
     this.CIRCLE_RADIUS = 30;
     this.CIRCLE_DIAMETER = 2 * this.CIRCLE_RADIUS;
     this.CIRCLE_SPACING = this.CIRCLE_DIAMETER + 0;
 
     this.COLOR_NEW_PORT = "green";
     this.COLOR_CLOSED_PORT = "red";
+
+    this._parent = parent;
 
     this._svg = parent.append("svg")
         .attr('height', this.CIRCLE_DIAMETER + 'px')
@@ -106,4 +112,12 @@ function PortsRow(parent) {
                 });
         }
     };
+
+    this.hasPorts = function() {
+        return this._ports.length !== 0;
+    };
+
+    this.getParent = function() {
+        return this._parent;
+    }
 }

@@ -59,26 +59,10 @@
               <li><a href="">Contact</a></li>
             </ul>
         </div>
-        <div class="col-sm-offset-3 col-md-offset-2">
+        <div>
           <h1>Tissue Dashboard</h1>
-
-          <h2>Currently running programs with open ports</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th width="150px" style="text-align:right">Program</th>
-                  <th>Open ports</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr height="30px">
-                  <td style="text-align:right;vertical-align:middle"><a href="#myModal" data-backdrop="false" data-toggle="modal">Dropbox</a></td>
-                  <td><div id="ports-dropbox"></div></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        </div>
+        <div class="tissue-main col-sm-offset-3 col-md-offset-2">
         </div>
       </div>
     </div>
@@ -135,6 +119,7 @@
     </div>
     <!-- /.modal -->
     <script>
+
     window.onload = function () {
         var portsRow = new PortsRow(d3.select("#ports-dropbox"));
         console.log(d3.select("#ports-dropbox"));
@@ -166,12 +151,10 @@
         };
 
         MessageLog.prototype.setScrollingEnabled = function(enabled) {
-          console.log("Setting scrolling to " + enabled);
             this._scrolling_enabled = enabled;
-        }
+        };
 
         var message_log = new MessageLog(document.querySelector('.message_pre'));
-        setInterval(function() {message_log.log("Foo")}, 1000);
 
         function toggleScrolling() {
             var scrollBox = document.querySelector(".log_scroll_checkbox");
@@ -187,7 +170,7 @@
 
         message_log.log('Trying to connect to remote server');
 
-        var socket = new SockJS('http://127.0.0.1:8080/sniff');
+        var socket = new SockJS('https://tissue-backend-c9-sporst.c9.io/sniff');
         var connected = false;
 
         socket.onclose = function(e) {
@@ -230,6 +213,7 @@
           addScript(pluginInfo.Code);
           var plugin = "new " + pluginInfo.MainClass + "(content.append('svg'), 1050, 450)";
           plugin = eval(plugin);
+          plugin.initialize(message_log);
           plugin_instances.push(plugin);
         }
 
@@ -238,6 +222,8 @@
                 connected = true;
                 message_log.log('Successfully connected to remote server');
             }
+
+            message_log.log("Received message: " + e);
 
             if (e.data[0] === "REGISTER-PLUGIN") {
                 message_log.log('Registered plugin: ' + e.data[1].Name);
