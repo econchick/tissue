@@ -1,5 +1,6 @@
 <html>
 <head>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="static/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="static/css/tissue.css" type="text/css">
     <link rel="stylesheet" href="static/css/custom.css" type="text/css">
@@ -47,22 +48,22 @@
     <div class="container-fluid">
     <div class="tissue-nav-break">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
+        <div class="col-sm-2 col-md-1 tissue-sidebar sidebar">
             <ul class="nav nav-sidebar">
               <li><a href="#">Overview</a></li>
               <li><a href="#">Ports</a></li>
               <li><a href="#">Traceroute</a></li>
               <li><a href="#">Throughput</a></li>
             </ul>
-            <ul class="nav nav-sidebar">
+            <ul class="nav nav-sidebar tissue-sidebar-break">
               <li><a href="">About</a></li>
               <li><a href="">Contact</a></li>
             </ul>
         </div>
-        <div>
+        <div class="col-sm-offset-2 col-md-offset-1 main">
           <h1>Tissue Dashboard</h1>
         </div>
-        <div class="tissue-main col-sm-offset-3 col-md-offset-2">
+        <div class="tissue-main col-sm-offset-2 col-md-offset-1">
         </div>
       </div>
     </div>
@@ -129,7 +130,7 @@
 
         message_log.log('Trying to connect to remote server');
 
-        var socket = new SockJS('https://tissue-backend-c9-sporst.c9.io/sniff');
+        var socket = new SockJS('http://127.0.0.1:8080/sniff');
         var connected = false;
 
         socket.onclose = function(e) {

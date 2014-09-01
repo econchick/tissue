@@ -26,14 +26,14 @@ function OpenPortsChart(svg, width, height) {
         this._message_log = message_log;
         var main_div = document.querySelector(".tissue-main");
         main_div.innerHTML = '<style type = "text/css" scoped> \
-        .port-cell-program { text-align:right;vertical-align:middle } \
+        .port-cell-program { text-align:left;vertical-align:middle } \
         </style> \
-        <h2>Currently running programs with open ports</h2> \
+        <h4>Currently running programs with open ports</h4> \
           <div class="table-responsive"> \
             <table class="table table-striped ports-table"> \
               <thead> \
                 <tr> \
-                  <th width="150px" style="text-align:right">Program</th> \
+                  <th width="50px" style="text-align:left">Program</th> \
                   <th>Open ports</th> \
                 </tr> \
               </thead> \

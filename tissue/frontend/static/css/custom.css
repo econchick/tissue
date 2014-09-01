@@ -1,19 +1,104 @@
+body {
+  background-color: #fff;
+  font-family: "Myriad Pro", myriad-pro, Verdana, serif;
+  font-size: 16px;
+}
+
+.navbar {
+  background-color: #483743;
+}
+.navbar-inverse .navbar-brand {
+  color: #97DFBA;
+  padding-left:25px;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+  color: #97DFBA;
+}
+
 .header-logo {
-    font-size:30px;
-    padding-left: 20px;
+  font-size:30px;
+  padding-left: 20px;
 }
 
-.tissue-nav-break {
-  padding-top: 50px;
+.main {
+  padding-top: 45px;
+  padding-left: 10px;
 }
 
-.modal
-{
+.tissue-sidebar-break {
+  padding-top: 15px;
+}
+
+.sidebar {
+  background-color: #F1F4F2;
+  bottom: 0px;
+  left: 0px;
+  display: block;
+  padding: 10px;
+  top: 51px;
+  position: fixed;
+  border-right: 1px solid #483743;
+}
+
+.tissue-sidebar {
+  font-family: "Open Sans";
+  font-size: 14px;
+}
+
+.tissue-main {
+  padding-left: 10px;
+}
+
+.modal {
     overflow: hidden;
 }
-.modal-dialog{
-    margin-right: 0;
-    margin-left: 0;
+.modal-dialog {
+    margin-right: 50px;
+    margin-left: 50px;
     width: 700px;
 }
 
+div.modal-body > div.table-responsive > table {
+  font-size: 12px;
+}
+
+.lightpeach {
+  color: #F5E0D3;
+}
+
+.lightgreen {
+  color: #8AF5A2;
+}
+
+.mediumgreen {
+  color: #3A714A;
+}
+
+.redblack {
+  color: #4D3B3B;
+}
+
+.message_div {
+  position:absolute;
+  height:150px;
+  width:100%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.message_pre_div {
+  font-size: 15px;
+  color: black;
+  overflow-y: auto;
+  height:110px;
+}
+
+.message_pre {
+  background-color:#483743;
+  width:100%;
+  height:100%;
+  font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+  color: #97DFBA;
+  border-radius: .2em;
+}

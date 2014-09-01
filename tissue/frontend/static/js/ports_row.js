@@ -2,8 +2,8 @@ function PortsRow(parent) {
     if (parent === null) {
         throw "Error: Parent of ports row object can not be null";
     }
-    
-    this.CIRCLE_RADIUS = 30;
+
+    this.CIRCLE_RADIUS = 20;
     this.CIRCLE_DIAMETER = 2 * this.CIRCLE_RADIUS;
     this.CIRCLE_SPACING = this.CIRCLE_DIAMETER + 0;
 
@@ -47,16 +47,15 @@ function PortsRow(parent) {
 
         var g = this._svg.append("g")
             .attr("transform", "translate(" + new_x + ", " + new_y + ")");
-    
+
         g.append("circle")
           .attr("r", this.CIRCLE_RADIUS)
           .style("fill", this.COLOR_NEW_PORT);
-    
+
         g.append("text")
             .attr('y', 5)
             .attr('fill', 'white')
-            .style('font-size', '15px')
-            .style('font-weight', 'bold')
+            .style('font-size', '11px')
             .attr("text-anchor", "middle")
             .text(port);
 
