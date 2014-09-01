@@ -30,6 +30,15 @@ function PortsRow(parent) {
               .duration(1000)
               .attr("transform", "translate(" + new_x + ", " + new_y + ")");
         }
+
+        // width style comes with 'px' appended
+        var width = this._svg.style('width');
+        width = width.substring(0, width.length - 2);
+
+        var min_width = (this._ports.length + 1) * this.CIRCLE_SPACING;
+        if (min_width > width) {
+            this._svg.attr('width', min_width + 'px');
+        }
     };
 
     this._createVisualGroup = function(port) {
