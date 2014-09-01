@@ -48,7 +48,6 @@ function OpenPortsChart(svg, width, height) {
         var row = table.insertRow();
         var cell1 = row.insertCell();
         var escaped_program_name = program_name.replace(/\./g, "-").replace(/\ /g, "-");
-        this._set_modal(escaped_program_name);
         cell1.className = "port-cell-program";
         cell1.innerHTML = '<a href="#modal-'+ escaped_program_name +'" data-backdrop="false" data-toggle="modal">' + program_name + '</a>';
         row.insertCell();
@@ -146,12 +145,6 @@ function OpenPortsChart(svg, width, height) {
         }
     };
 
-    this._set_modal = function(modal_name) {
-        $("#modal-" + modal_name).draggable({
-            handle: ".modal-header"
-        });
-    };
-
     this._set_modal_html = function(program_name, program_info) {
         var escaped_program_name = program_name.replace(/\./g, "-").replace(/\ /g, "-");
         var modal_div = $("#tissue-modal");
@@ -218,6 +211,9 @@ function OpenPortsChart(svg, width, height) {
               <!-- /.modal-dialog --> \
             </div> \
             <!-- /.modal -->');
+        $("#modal-" + escaped_program_name).draggable({
+            handle: ".modal-header"
+        });
         return modal_div;
     };
 
@@ -233,7 +229,3 @@ function OpenPortsChart(svg, width, height) {
         }
     };
 }
-
-// $("#myModal").draggable({
-//   handle: ".modal-header"
-// });
